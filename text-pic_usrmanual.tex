@@ -1,0 +1,300 @@
+% 由于使用了minted宏包排版代码，
+% 需要安装Python
+% 并命令行使用pip install Pygments安装Pygments库
+% 然后编译需要使用xelatex --shell-escape
+\documentclass{l3doc}
+\usepackage{ctex}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{varwidth}      % 获得宽度
+\usepackage{graphicx}
+\title{\bfseries text-pich宏包}
+\author{夏康玮\\ \path{kangweixia_xdyy@163.com}}
+\date{2022-01-21\quad v0.0.1 \thanks{\url{https://github.com/xkwxdyy/text-pic}\url{https://gitee.com/xkwxdyy/text-pic}}}
+
+\usepackage{minted}
+\setminted{formatcom=\xeCJKVerbAddon}
+\usepackage{sourcecodepro}
+\usepackage{xcolor}
+\usepackage{mwe}
+\makeatletter
+\newlength\savefboxrule
+\newlength\savefboxsep
+\edef\example@name{\jobname-example.aux}
+\newenvironment{hexample}%
+{%
+\renewcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    \let\FV@ProcessLine\minted@write@detok
+    \immediate\openout\FV@OutFile ##1\relax
+    \let\FV@FontScanPrep\relax
+    \let\@noligs\relax
+    \FV@Scan}
+\minted@FVB@VerbatimOut{\example@name}}%
+{\minted@FVE@VerbatimOut%
+  \trivlist\item\relax
+  \setlength{\savefboxrule}{\fboxrule}%
+  \setlength{\savefboxsep}{\fboxsep}%
+  \setlength{\fboxsep}{0.015\textwidth}%
+  \setlength{\fboxrule}{0.4pt}%
+  \fcolorbox[gray]{0}{0.95}{%
+    \begin{minipage}[c]{0.45\textwidth}%
+      \setlength{\fboxrule}{\savefboxrule}%
+      \setlength{\fboxsep}{\savefboxsep}%
+      \small\inputminted[breakanywhere,breaklines=true,numbers=left]{latex}{\example@name}%
+    \end{minipage}%
+  }%
+  \hfill%
+  \fbox{%
+    \begin{minipage}[c]{0.45\textwidth}%
+      \setlength{\fboxrule}{\savefboxrule}%
+      \setlength{\fboxsep}{\savefboxsep}%
+      \setlength{\parskip}{1ex plus 0.4ex minus 0.2ex}%
+      \normalsize\input{\example@name}%
+    \end{minipage}%
+  }%
+  \endtrivlist
+}
+\newenvironment{vexample}%
+{%
+\renewcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    \let\FV@ProcessLine\minted@write@detok
+    \immediate\openout\FV@OutFile ##1\relax
+    \let\FV@FontScanPrep\relax
+    \let\@noligs\relax
+    \FV@Scan}
+\minted@FVB@VerbatimOut{\example@name}}%
+{\minted@FVE@VerbatimOut%
+  \trivlist\item\relax
+  \setlength{\savefboxrule}{\fboxrule}%
+  \setlength{\savefboxsep}{\fboxsep}%
+  \setlength{\fboxsep}{0.015\textwidth}%
+  \setlength{\fboxrule}{0.4pt}%
+  \begin{minipage}[c]{\textwidth}
+  \fcolorbox[gray]{0}{0.95}{%
+    \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
+      \setlength{\fboxrule}{\savefboxrule}%
+      \setlength{\fboxsep}{\savefboxsep}%
+      \small\inputminted[breakanywhere,breaklines=true,numbers=left]{latex}{\example@name}%
+    \end{minipage}%
+  }\\
+  \fbox{%
+    \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
+      \setlength{\fboxrule}{\savefboxrule}%
+      \setlength{\fboxsep}{\savefboxsep}%
+      \setlength{\parskip}{1ex plus 0.4ex minus 0.2ex}%
+      \normalsize\input{\example@name}%
+    \end{minipage}%
+  }%
+  \end{minipage}
+  \endtrivlist
+}
+\newenvironment{floatexample}%
+{%
+\renewcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    \let\FV@ProcessLine\minted@write@detok
+    \immediate\openout\FV@OutFile ##1\relax
+    \let\FV@FontScanPrep\relax
+    \let\@noligs\relax
+    \FV@Scan}
+\minted@FVB@VerbatimOut{\example@name}}%
+{\minted@FVE@VerbatimOut%
+  \trivlist\item\relax
+  \setlength{\savefboxrule}{\fboxrule}%
+  \setlength{\savefboxsep}{\fboxsep}%
+  \setlength{\fboxsep}{0.015\textwidth}%
+  \setlength{\fboxrule}{0.4pt}%
+  \fcolorbox[gray]{0}{0.95}{%
+    \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
+      \setlength{\fboxrule}{\savefboxrule}%
+      \setlength{\fboxsep}{\savefboxsep}%
+      \small\inputminted[breakanywhere,breaklines=true,numbers=left]{latex}{\example@name}%
+    \end{minipage}%
+  }\par
+  \input{\example@name}%
+  \endtrivlist
+}
+\makeatother
+
+\lstnewenvironment{LaTeXdemo}[1][0.4]{
+  \lstset{
+    basicstyle         = \ttfamily\small,
+    basewidth          = 0.51em,
+    backgroundcolor    = \color{cyan!10},
+    % rulecolor          = \color{red!10},
+    frame              = shadowbox,
+    frameround         = tttt,
+    % framerule          = 0pt,
+    gobble             = 2,
+    tabsize            = 2,
+    numbers            = left,
+    language           = [LaTeX]TeX,
+    linewidth          = #1\linewidth
+  }
+}{}
+\ExplSyntaxOn
+\dim_new:N \g__LaTeXautodemo_width_dim
+\box_new:N \g__LaTeXautodemo_width_measure_box
+\makeatletter
+\lst@RequireAspects{writefile}
+\newsavebox\LaTeXautodemo@box
+\lstnewenvironment{LaTeXautodemo}[1][code and example]
+  {%
+    \global\let\lst@intname\@empty
+    \edef\LaTeXautodemo@end{%
+      \expandafter\noexpand\csname LaTeXautodemo@@#1@end\endcsname
+    }%
+    \@nameuse{LaTeXautodemo@@#1}%
+  }
+  {
+    \LaTeXautodemo@end
+  }
+\newcommand\LaTeXautodemo@new[3]{%
+  \@namedef{LaTeXautodemo@@#1}{#2}%
+  \@namedef{LaTeXautodemo@@#1@end}{#3}%
+}
+\newcommand*\LaTeXautodemo@common{%
+  \setkeys{lst}
+    {%
+      basicstyle         = \ttfamily\small,
+      basewidth          = 0.51em,
+      backgroundcolor    = \color{cyan!10},
+      % rulecolor          = \color{red!10},
+      frame              = shadowbox,
+      frameround         = tttt,
+      % framerule          = 0pt,
+      gobble             = 2,
+      tabsize            = 2,
+      numbers            = left,
+      language           = [LaTeX]TeX,
+      % linewidth          = 0.7\linewidth
+    }%
+}
+\newcount\LaTeXautodemo@count
+\newcommand*\LaTeXautodemo@input{%
+  \catcode`\^^M = 10\relax
+  \input{\jobname-\number\LaTeXautodemo@count.tmp}%
+}
+\LaTeXautodemo@new{code and example}{%
+  \setbox\LaTeXautodemo@box=\hbox\bgroup
+    \global\advance\LaTeXautodemo@count by 1 %
+    \lst@BeginAlsoWriteFile{\jobname-\number\LaTeXautodemo@count.tmp}   % 将内容存在中途文件里面
+    \LaTeXautodemo@common
+}{%
+    \lst@EndWriteFile
+  \egroup
+  \hbox_set:Nn \g__LaTeXautodemo_width_measure_box
+    {
+      \begin{varwidth}{\hsize}
+        \usebox\LaTeXautodemo@box
+      \end{varwidth}
+    }
+  \dim_set:Nn \g__LaTeXautodemo_width_dim { \box_wd:N \g__LaTeXautodemo_width_measure_box }
+  % \lstset
+  % 	{
+  % 		linewidth = \dim_use:N \l__LaTeXautodemo_width_dim
+  % 	}
+  \begin{center}
+    \dim_compare:nNnTF { \g__LaTeXautodemo_width_dim } > { 0.4\linewidth}
+      {
+        % \dim_use:N \g__LaTeXautodemo_width_dim
+        \begin{minipage}{\linewidth}
+          % \setkeys{lst}{ linewidth = \dim_use:N \l__LaTeXautodemo_width_dim }
+          \usebox\LaTeXautodemo@box
+        \end{minipage}%
+        \par
+        \begin{minipage}{\linewidth}
+          \LaTeXautodemo@input
+        \end{minipage}
+      }
+      {
+        \begin{minipage}{0.4\linewidth}
+          \usebox\LaTeXautodemo@box
+        \end{minipage}%
+        \hfil
+        \begin{minipage}{0.4\linewidth}
+          \LaTeXautodemo@input
+        \end{minipage}%
+      }
+    % \ifdim\wd\LaTeXautodemo@box > 0.48\linewidth
+    %   \begin{minipage}{\linewidth}
+    %     \usebox\LaTeXautodemo@box
+    %   \end{minipage}%
+    %   \par
+    %   \begin{minipage}{\linewidth}
+    %     \LaTeXautodemo@input
+    %   \end{minipage}
+    % \else
+    %   \begin{minipage}{0.48\linewidth}
+    %     \LaTeXautodemo@input
+    %   \end{minipage}%
+    %   \hfil
+    %   \begin{minipage}{0.48\linewidth}
+    %     \usebox\LaTeXautodemo@box
+    %   \end{minipage}%
+    % \fi
+  \end{center}
+}
+\LaTeXautodemo@new{code and float}{%
+  \global\advance\LaTeXautodemo@count by 1 %
+  \lst@BeginAlsoWriteFile{\jobname-\number\LaTeXautodemo@count.tmp}%
+  \LaTeXautodemo@common
+}{%
+  \lst@EndWriteFile
+  \LaTeXautodemo@input
+}
+\LaTeXautodemo@new{code only}{\LaTeXautodemo@common}{}
+\makeatother
+\ExplSyntaxOff
+
+\renewcommand{\emph}[1]{\begingroup \bfseries \textcolor{red!80}{#1} \endgroup}
+\NewDocumentCommand{\init}{+v}{\hspace{\fill}初始值~=~\textcolor{blue}{\bfseries#1}}
+\DeclareDocumentCommand\kvopt{mm}
+  {\texttt{#1 \breakablethinspace = \breakablethinspace#2}}
+\def\breakablethinspace{\hskip 0.16667em\relax}
+\ExplSyntaxOn
+\NewDocumentCommand{ \remark }{ +m }{
+  \group_begin:
+    \centering
+    \color{violet}
+    #1
+  \group_end:
+}
+\ExplSyntaxOff
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+
+\section{宏包简介}
+
+
+\section{命令环境说明}
+
+
+\subsection{命令}
+\begin{function}{foo}
+  \begin{syntax}
+
+  \end{syntax}
+\end{function}
+
+\subsection{环境}
+
+\end{document}
