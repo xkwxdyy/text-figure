@@ -1,0 +1,174 @@
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\RequirePackage{expl3}
+\ProvidesExplPackage {text-pic} {2022-01-22} {0.0.1}
+  {
+    A package for flexibly LaTeXing text with pictures in exampapers.
+    Kangwei Xia
+    <kangweixia_xdyy@163.com>
+  }
+\RequirePackage { xtemplate, l3keys2e, l3draw, xparse }
+\clist_map_inline:nn { xparse, xtemplate, l3keys2e }
+  {
+    \@ifpackagelater {#1} { 2018/05/12 }
+      { } { \msg_error:nnn { text-pic } { l3-too-old } {#1} }
+  }
+\@ifpackagelater {expl3} { 2021/11/12 }
+  { } { \msg_error:nnn { text-pic } { l3-too-old } {#1} }
+\msg_new:nnn { text-pic } { l3-too-old }
+  {
+    Package~ "#1"~ is~ too~ old. \\\\
+    Please~ update~ an~ up-to-date~ version~ of~ the~ bundles \\
+    "l3kernel"~ and~ "l3packages"~ using~ your~ TeX~ package \\
+    manager~ or~ from~ CTAN.
+  }
+\sys_if_engine_xetex:F
+  {
+    \sys_if_engine_luatex:F
+      {
+        \msg_fatal:nnx { choices } { unsupported-engine }
+          { \c_sys_engine_str }
+      }
+  }
+\msg_new:nnn { text-pic } { unsupported-engine }
+  {
+    The~ choice~ package~ requires~ either~ XeTeX~ or~ LuaTeX. \\\\
+    "#1"~ is~ not~ supported~ at~ present.~ You~ must~ change \\
+    your~ typesetting~ engine~ to~ "xelatex"~ or~ "lualatex".
+  }
+
+
+%%%% 宏包载入 %%%%
+\RequirePackage{ xcoffins }
+
+
+
+%%%% 设置变量 %%%%
+\coffin_new:N \l__textpic_text_coffin        % 用于存文本
+\coffin_new:N \l__textpic_pic_coffin         % 用于存图片
+
+\str_new:N \l__textpic_current_anchor_str    % 用来存当前的anchor值
+
+
+
+%%%% 定义函数 %%%%
+\cs_generate_variant:Nn \str_case:nn {Vn}
+% 最终的拼接命令
+\cs_new_protected:Npn \textpic_output:nn #1#2
+  {
+    \hcoffin_set:Nn \l__textpic_text_coffin {#1}
+    \hcoffin_set:Nn \l__textpic_pic_coffin {#2}
+    \texpic_detect_anchor_join_coffin:NN
+      \l__textpic_text_coffin
+      \l__textpic_pic_coffin
+  }
+
+\cs_new_protected:Npn \texpic_detect_anchor_join_coffin:NN #1#2
+  {
+    \str_case:Vn \l__textpic_current_anchor_str
+      {
+        {north} { \textpic_anchor_set_north:NN #1 #2 }
+      }
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_north:
+  {
+0    
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_south:
+  {
+    0
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_west:
+  {
+1
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_east:
+  {
+2
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_northeast:
+  {
+3
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_southeast:
+  {
+4
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_northwest:
+  {
+5
+  }
+\cs_new_protected:Nn \textpic_keyval_anchor_set_southwest:
+  {
+6
+  }
+
+% 用于\textpic_output:nn的最终拼接
+\cs_new_protected:Nn \textpic_anchor_set_north:NN #1#2
+  {
+0    
+  }
+\cs_new_protected:Nn \textpic_anchor_set_south:NN #1#2
+  {
+    0
+  }
+\cs_new_protected:Nn \textpic_anchor_set_west:NN #1#2
+  {
+1
+  }
+\cs_new_protected:Nn \textpic_anchor_set_east:NN #1#2
+  {
+2
+  }
+\cs_new_protected:Nn \textpic_anchor_set_northeast:NN #1#2
+  {
+3
+  }
+\cs_new_protected:Nn \textpic_anchor_set_southeast:NN #1#2
+  {
+4
+  }
+\cs_new_protected:Nn \textpic_anchor_set_northwest:NN #1#2
+  {
+5
+  }
+\cs_new_protected:Nn \textpic_anchor_set_southwest:NN #1#2
+  {
+6
+  }
+
+
+%%%% 定义键值 %%%%
+\keys_define:nn { text-pic }
+  {
+    % anchor为图片位于文本的方位
+    anchor .code:n = 
+      { 
+        \use:c { textpic_anchor_set_#1: } 
+        \str_set:Nn \l__textpic_current_anchor_str {#1}
+      },
+    anchor .initial:n = southeast,
+    % vsep：调整图片的垂直额外偏移量
+
+    % hsep：调整图片的水平额外偏移量
+
+    % ratio：文本coffin占行宽的比例，范围0-1
+
+    % text-width：手动设置文本coffin的宽度，默认为行宽
+
+    unknown .code:n = 
+      { \msg_error:nnn { text-pic } { unknown-option } {#1} }
+  }
+
+\msg_new:nnn { text-pic } { unknown-option }
+  { package~ option~ "\l_keys_key_tl"~ is~ unknown. }
+
+
+%%%% 用户命令接口 %%%%
+\NewDocumentCommand{ \textpic }{ O{} +m m }
+  {
+    \group_begin:
+      \keys_set:nn { text-pic } {#1}
+      #2 #3
+      % \textpic_output:nn {#2} {#3}
+    \group_end:
+  }
