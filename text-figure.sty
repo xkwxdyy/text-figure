@@ -145,7 +145,12 @@
           #1
         \end{varwidth}
       }
-    \hcoffin_set:Nn \l__textfigure_figure_coffin {#2}
+    \hcoffin_set:Nn \l__textfigure_figure_coffin 
+      {
+        \begin{varwidth}{\hsize}
+          #2
+        \end{varwidth}
+      }
     \use:c { textfigure_fig_pos_set_ \l__textfigure_current_fig_pos_str :NN }
       \l__textfigure_text_coffin
       \l__textfigure_figure_coffin
