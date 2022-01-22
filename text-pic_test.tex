@@ -1,17 +1,47 @@
 \documentclass{ctexart}
-% \usepackage{text-pic}
+\usepackage{text-pic}
+\usepackage{graphicx}
+\usepackage{choices}
 
 \begin{document}
-\ExplSyntaxOn
-\cs_new:Npn \test:nn #1 #2
-  {
-    #1 + #2
-  }
 
-\cs_new:Npn \test:n #1
-  {
-    \test:nn {1} {#1}
+\begin{enumerate}
+  \item \textpic[anchor = east]{
+    某工厂为提高生产效率，开展技术创新活动，提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组，每组$20$人．第一组工人用第一种生产方式，第二组工人用第二种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
+    \choices{
+      1 &&
+      2 &&
+      3 &&
+      4 &&
+    }
+  }{
+    \includegraphics[width = 2cm]{example-image-a}
   }
-\test:n {2}
-\ExplSyntaxOff
+  
+  \item 某工厂为提高生产效率，开展技术创新活动，提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组，每组$20$人．第一组工人用第一种生产方式，第二组工人用第二种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
+  
+  \textpic[anchor = north]{
+    \choices{
+      1 &&
+      2 &&
+      3 &&
+      4 &&
+    }
+  }{
+    \includegraphics[width = 2cm]{example-image-a}
+  }
+\end{enumerate}
+
+\begin{enumerate}
+  \item \textpic[anchor = southeast]{
+    某工厂为提高生产效率，开展技术创新活动，提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组，每组$20$人．第一组工人用第一种生产方式，第二组工人用第二种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
+    }{
+      \includegraphics[width = 4cm]{example-image-a}
+    }
+  \item \textpic[anchor = southeast]{
+    某工厂为提高生产效率，开展技术创新活动，提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组，每组$20$人．第一组工人用第一种生产方式，第二组工人用第二种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
+    }{
+      \includegraphics[width = 4cm]{example-image-a}
+    }
+\end{enumerate}
 \end{document}

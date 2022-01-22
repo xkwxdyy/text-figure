@@ -39,7 +39,7 @@
 
 %%%% 宏包载入 %%%%
 \RequirePackage{ xcoffins }
-
+\RequirePackage{ varwidth }
 
 
 %%%% 设置变量 %%%%
@@ -48,113 +48,29 @@
 
 \str_new:N \l__textpic_current_anchor_str    % 用来存当前的anchor值
 
+\fp_new:N \l__textpic_text_ratio_fp          % 文本的比例
+\dim_new:N \l__textpic_text_width_dim        % 文本的宽度
+\dim_new:N \l__textpic_tmpa_dim              % 临时变量
 
-
-%%%% 定义函数 %%%%
-\cs_generate_variant:Nn \str_case:nn {Vn}
-% 最终的拼接命令
-\cs_new_protected:Npn \textpic_output:nn #1#2
-  {
-    \hcoffin_set:Nn \l__textpic_text_coffin {#1}
-    \hcoffin_set:Nn \l__textpic_pic_coffin {#2}
-    \texpic_detect_anchor_join_coffin:NN
-      \l__textpic_text_coffin
-      \l__textpic_pic_coffin
-  }
-
-\cs_new_protected:Npn \texpic_detect_anchor_join_coffin:NN #1#2
-  {
-    \str_case:Vn \l__textpic_current_anchor_str
-      {
-        {north} { \textpic_anchor_set_north:NN #1 #2 }
-      }
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_north:
-  {
-0    
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_south:
-  {
-    0
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_west:
-  {
-1
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_east:
-  {
-2
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_northeast:
-  {
-3
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_southeast:
-  {
-4
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_northwest:
-  {
-5
-  }
-\cs_new_protected:Nn \textpic_keyval_anchor_set_southwest:
-  {
-6
-  }
-
-% 用于\textpic_output:nn的最终拼接
-\cs_new_protected:Nn \textpic_anchor_set_north:NN #1#2
-  {
-0    
-  }
-\cs_new_protected:Nn \textpic_anchor_set_south:NN #1#2
-  {
-    0
-  }
-\cs_new_protected:Nn \textpic_anchor_set_west:NN #1#2
-  {
-1
-  }
-\cs_new_protected:Nn \textpic_anchor_set_east:NN #1#2
-  {
-2
-  }
-\cs_new_protected:Nn \textpic_anchor_set_northeast:NN #1#2
-  {
-3
-  }
-\cs_new_protected:Nn \textpic_anchor_set_southeast:NN #1#2
-  {
-4
-  }
-\cs_new_protected:Nn \textpic_anchor_set_northwest:NN #1#2
-  {
-5
-  }
-\cs_new_protected:Nn \textpic_anchor_set_southwest:NN #1#2
-  {
-6
-  }
+\skip_new:N \l__textpic_tmpa_skip            % 临时变量
 
 
 %%%% 定义键值 %%%%
 \keys_define:nn { text-pic }
   {
     % anchor为图片位于文本的方位
-    anchor .code:n = 
-      { 
-        \use:c { textpic_anchor_set_#1: } 
-        \str_set:Nn \l__textpic_current_anchor_str {#1}
-      },
+    anchor .str_set:N = \l__textpic_current_anchor_str,
     anchor .initial:n = southeast,
     % vsep：调整图片的垂直额外偏移量
 
     % hsep：调整图片的水平额外偏移量
 
-    % ratio：文本coffin占行宽的比例，范围0-1
-
     % text-width：手动设置文本coffin的宽度，默认为行宽
-
+    text-width .dim_set:N = \l__textpic_text_width_dim,
+    text-width .initial:n = \hsize,
+    % text-ratio：文本coffin占行宽的比例，范围0-1
+    text-ratio .fp_set:N = \l__textpic_text_ratio_fp,
+    text-ratio .initial:n = 1,
     unknown .code:n = 
       { \msg_error:nnn { text-pic } { unknown-option } {#1} }
   }
@@ -163,12 +79,135 @@
   { package~ option~ "\l_keys_key_tl"~ is~ unknown. }
 
 
+%%%% 定义函数 %%%%
+\cs_new:Npn \__textpic_quad:  { \skip_horizontal:n { 1 em } }
+\cs_new:Npn \__textpic_qquad: { \skip_horizontal:n { 2 em } }
+\cs_new_protected:Npn \__textpic_vspace:N #1
+  {
+    \dim_set_eq:NN \l__textpic_tmpa_dim \prevdepth
+    \hrule height \c_zero_dim
+    \nobreak
+    \skip_vertical:N #1
+    \skip_vertical:N \c_zero_skip
+    \dim_set_eq:NN \prevdepth \l__textpic_tmpa_dim
+  }
+\cs_new_protected:Npn \__textpic_vspace:n #1
+  {
+    \skip_set:Nn \l__textpic_tmpa_skip {#1}
+    \__textpic_vspace:N \l__textpic_tmpa_skip
+  }
+
+% 【待解决】判断anchor是不是west或者east，是的话就自动调整调整一下text-ratio
+% - 问题在于要知道key-val设置了什么anchor才能判断
+% - 但是这个key-val设置和手动设置ratio是同一接口
+% - 理想是：
+%   - 先用户设置anchor
+%   - 然后自动判断是否是west或者east，并自动调整ratio
+%   - 然后用户手动的话以手动的为准
+% \cs_new_protected:Npn \l__textpic_ratio_set:
+%   {
+%     \str_case:Vn \l__textpic_current_anchor_str
+%       {
+%         {east} { \fp_set:Nn \l__textpic_text_ratio_fp {0.7} }
+%         {west} { \fp_set:Nn \l__textpic_text_ratio_fp {0.7} }
+%       }
+%   }
+% 最终的拼接命令
+\cs_new_protected:Npn \textpic_output:nn #1#2
+  {
+    \dim_set:Nn \l__textpic_text_width_dim
+      {
+        \l__textpic_text_width_dim * \dim_ratio:nn { \fp_use:N \l__textpic_text_ratio_fp pt } { 1 pt }
+      }
+    \hcoffin_set:Nn \l__textpic_text_coffin 
+      {
+        \begin{varwidth}{ \l__textpic_text_width_dim }
+          #1
+        \end{varwidth}
+      }
+    \hcoffin_set:Nn \l__textpic_pic_coffin {#2}
+    \use:c { textpic_anchor_set_ \l__textpic_current_anchor_str :NN }
+      \l__textpic_text_coffin
+      \l__textpic_pic_coffin
+    \coffin_typeset:Nnnnn \l__textpic_text_coffin
+      { t } { l }
+      { 0pt } { 0.5\baselineskip }
+    \vspace*{1em}
+  }
+
+
+% 用于\textpic_output:nn的最终拼接
+\cs_new_protected:Npn \textpic_anchor_set_north:NN #1#2
+  {
+    \__textpic_vspace:n {1em}
+    \coffin_join:NnnNnnnn
+      #1 { t } { hc }
+      #2 { H } { hc }
+      { 0pt } { 2em }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_south:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { H } { hc }
+      #2 { t } { hc }
+      { 0pt }
+      { 0pt }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_west:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { l }
+      #2 { vc } { r }
+      { 0pt }
+      { 0pt }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_east:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { r }
+      #2 { vc } { l }
+      { 1em } { 0pt }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_northeast:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { r }
+      #2 { vc } { l }
+      { 0pt }
+      { 0pt }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_southeast:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { r }
+      #2 { t } { r }
+      { 0pt } { -2em }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_northwest:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { r }
+      #2 { vc } { l }
+      { 0pt }
+      { 0pt }
+  }
+\cs_new_protected:Npn \textpic_anchor_set_southwest:NN #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { r }
+      #2 { vc } { l }
+      { 0pt }
+      { 0pt }
+  }
+
+
+
+
 %%%% 用户命令接口 %%%%
 \NewDocumentCommand{ \textpic }{ O{} +m m }
   {
     \group_begin:
       \keys_set:nn { text-pic } {#1}
-      #2 #3
-      % \textpic_output:nn {#2} {#3}
+      \textpic_output:nn {#2} {#3}
     \group_end:
   }
