@@ -155,16 +155,14 @@
     \coffin_join:NnnNnnnn
       #1 { H } { hc }
       #2 { t } { hc }
-      { 0pt }
-      { 0pt }
+      { 0pt } { -2em }
   }
 \cs_new_protected:Npn \textpic_anchor_set_west:NN #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { l }
       #2 { vc } { r }
-      { 0pt }
-      { 0pt }
+      { -1em } { 0pt }
   }
 \cs_new_protected:Npn \textpic_anchor_set_east:NN #1#2
   {
@@ -176,33 +174,30 @@
 \cs_new_protected:Npn \textpic_anchor_set_northeast:NN #1#2
   {
     \coffin_join:NnnNnnnn
-      #1 { vc } { r }
-      #2 { vc } { l }
-      { 0pt }
-      { 0pt }
+      #1 { t } { r }
+      #2 { b } { r }
+      { 0pt } { 1em }
   }
 \cs_new_protected:Npn \textpic_anchor_set_southeast:NN #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { t } { r }
-      { 0pt } { -2em }
+      { 0pt } { -1em }
   }
 \cs_new_protected:Npn \textpic_anchor_set_northwest:NN #1#2
   {
     \coffin_join:NnnNnnnn
-      #1 { vc } { r }
-      #2 { vc } { l }
-      { 0pt }
-      { 0pt }
+      #1 { t } { l }
+      #2 { b } { l }
+      { 0pt } { 1em }
   }
 \cs_new_protected:Npn \textpic_anchor_set_southwest:NN #1#2
   {
     \coffin_join:NnnNnnnn
-      #1 { vc } { r }
-      #2 { vc } { l }
-      { 0pt }
-      { 0pt }
+      #1 { b } { l }
+      #2 { t } { l }
+      { 0pt } { -1em }
   }
 
 
