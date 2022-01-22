@@ -268,6 +268,9 @@
 
 
 %%%% 用户命令接口 %%%%
+\NewDocumentCommand{ \textfiguresetup }{ m }
+  { \keys_set:nn { text-figure } {#1} }
+  
 \NewDocumentCommand{ \textfigure }{ O{} +m m }
   {
     \group_begin:
