@@ -51,6 +51,7 @@
 \fp_new:N \l__textfigure_text_ratio_fp          % 文本的比例
 
 \dim_new:N \l__textfigure_text_width_dim        % 文本的宽度
+\dim_new:N \l__textfigure_figure_width_dim      % 图片的varwidth环境的宽度
 \dim_new:N \l__textfigure_tmpa_dim              % 临时变量
 \dim_new:N \l__textfigure_horizontal_sep_dim    % 水平偏移量
 \dim_new:N \l__textfigure_vertical_sep_dim      % 垂直偏移量
@@ -89,9 +90,12 @@
     % hsep：调整图片的水平额外偏移量
     hsep .dim_set:N = \l__textfigure_horizontal_sep_dim,
     hsep .initial:n = 0pt,
-    % text-width：手动设置文本coffin的宽度，默认为行宽
+    % text-width：手动设置文本的varwidth环境的宽度
     text-width .dim_set:N = \l__textfigure_text_width_dim,
     text-width .initial:n = \hsize,
+    % figure-width：手动设置figure的varwidth环境的宽度
+    figure-width .dim_set:N = \l__textfigure_figure_width_dim,
+    figure-width .initial:n = \hsize,
     % text-ratio：文本coffin占行宽的比例，范围0-1
     text-ratio .fp_set:N = \l__textfigure_text_ratio_fp,
     text-ratio .initial:n = 1,
@@ -147,7 +151,7 @@
       }
     \hcoffin_set:Nn \l__textfigure_figure_coffin 
       {
-        \begin{varwidth}{\hsize}
+        \begin{varwidth}{ \l__textfigure_figure_width_dim }
           #2
         \end{varwidth}
       }
@@ -167,14 +171,14 @@
     \__textfigure_vspace:n {1em}
     \coffin_join:NnnNnnnn
       #1 { t } { hc }
-      #2 { H } { hc }
+      #2 { b } { hc }
       { \l__textfigure_horizontal_sep_dim } 
       { 2em + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
-      #1 { H } { hc }
+      #1 { b } { hc }
       #2 { t } { hc }
       { \l__textfigure_horizontal_sep_dim }
       { -2em + \l__textfigure_vertical_sep_dim }
