@@ -6,16 +6,17 @@
 
 #### Added
 
-- 可以调整图片的anchor
+- 可以调整图片的`anchor`
 - 可以调整文本的宽度或者占行距的比例
-- anchor=west或者east的时候先自动调整ratio，然后可以被手动调整
+- `anchor = west`或者`east`的时候先自动调整`ratio`，然后可以被手动调整
 - 增加了图片的水平和垂直方向的偏移量键值
+- 增加了和`left`和`right`等价的`left-center`,`right-center`
 
 ### Changed
 
-- 调整anchor为fig-pos
-- 调整anchor的东南西北系列（east, south, west, north 及其组合）为fig-pos上下左右系列（top, bottom, left, right 及其组合）
-- 增加了left和right的top和bottom形式（top-right是右上，right-top是右边的顶部）
+- 调整`anchor`为`fig-pos`
+- 调整`anchor`的东南西北系列（`east, south, west, north` 及其组合）为fig-pos上下左右系列（`top, bottom, left, right` 及其组合）
+- 增加了`left`和`right`的`top`和`bottom`形式（`top-right`是右上，`right-top`是右边的顶部）
 
 ## 仓库地址
 

@@ -67,8 +67,8 @@
         left , right , top , bottom ,
         top-left , bottom-left ,
         top-right , bottom-right ,
-        right-top , right-bottom ,
-        left-top , left-bottom
+        right-top , right-bottom , right-center ,
+        left-top , left-bottom , left-center
       }
       {
         \str_set:NV \l__textfigure_current_fig_pos_str \l_keys_choice_tl
@@ -76,6 +76,8 @@
           {
             {left} {}
             {right} {}
+            {left-center} {}
+            {right-center} {}
             {right-top} {}
             {right-bottom} {}
             {left-top} {}
@@ -191,6 +193,14 @@
       { -1em + \l__textfigure_horizontal_sep_dim }
       { 0pt + \l__textfigure_vertical_sep_dim }
   }
+\cs_new_protected:cpn { textfigure_fig_pos_set_left-center:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { l }
+      #2 { vc } { r }
+      { -1em + \l__textfigure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_vertical_sep_dim }
+  }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left-top:NN } #1#2
   {
     \coffin_join:NnnNnnnn
@@ -213,6 +223,14 @@
       #1 { t } { r }
       #2 { t } { l }
       { 1em + \l__textfigure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_vertical_sep_dim }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_right-center:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { r }
+      #2 { vc } { l }
+      { 1em + \l__textfigure_horizontal_sep_dim } 
       { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right-bottom:NN } #1#2
@@ -270,7 +288,7 @@
 %%%% 用户命令接口 %%%%
 \NewDocumentCommand{ \textfiguresetup }{ m }
   { \keys_set:nn { text-figure } {#1} }
-  
+
 \NewDocumentCommand{ \textfigure }{ O{} +m m }
   {
     \group_begin:
