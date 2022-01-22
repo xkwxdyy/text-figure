@@ -49,8 +49,11 @@
 \str_new:N \l__textfigure_current_fig_pos_str    % 用来存当前的anchor值
 
 \fp_new:N \l__textfigure_text_ratio_fp          % 文本的比例
+
 \dim_new:N \l__textfigure_text_width_dim        % 文本的宽度
 \dim_new:N \l__textfigure_tmpa_dim              % 临时变量
+\dim_new:N \l__textfigure_horizontal_sep_dim    % 水平偏移量
+\dim_new:N \l__textfigure_vertical_sep_dim      % 垂直偏移量
 
 \skip_new:N \l__textfigure_tmpa_skip            % 临时变量
 
@@ -81,9 +84,11 @@
       },
     fig-pos .initial:n = bottom-right,
     % vsep：调整图片的垂直额外偏移量
-
+    vsep .dim_set:N = \l__textfigure_vertical_sep_dim,
+    vsep .initial:n = 0pt,
     % hsep：调整图片的水平额外偏移量
-
+    hsep .dim_set:N = \l__textfigure_horizontal_sep_dim,
+    hsep .initial:n = 0pt,
     % text-width：手动设置文本coffin的宽度，默认为行宽
     text-width .dim_set:N = \l__textfigure_text_width_dim,
     text-width .initial:n = \hsize,
@@ -158,84 +163,96 @@
     \coffin_join:NnnNnnnn
       #1 { t } { hc }
       #2 { H } { hc }
-      { 0pt } { 2em }
+      { \l__textfigure_horizontal_sep_dim } 
+      { 2em + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { H } { hc }
       #2 { t } { hc }
-      { 0pt } { -2em }
+      { \l__textfigure_horizontal_sep_dim }
+      { -2em + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { l }
       #2 { vc } { r }
-      { -1em } { 0pt }
+      { -1em + \l__textfigure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left-top:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { l }
       #2 { t } { r }
-      { -1em } { 0pt }
+      { -1em + \l__textfigure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left-bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { l }
       #2 { b } { r }
-      { -1em } { 0pt }
+      { -1em + \l__textfigure_horizontal_sep_dim } 
+      { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right-top:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { r }
       #2 { t } { l }
-      { 1em } { 0pt }
+      { 1em + \l__textfigure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right-bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { b } { l }
-      { 1em } { 0pt }
+      { 1em + \l__textfigure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { r }
       #2 { vc } { l }
-      { 1em } { 0pt }
+      { 1em + \l__textfigure_horizontal_sep_dim } 
+      { 0pt + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-right:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { r }
       #2 { b } { r }
-      { 0pt } { 1em }
+      { 0pt + \l__textfigure_horizontal_sep_dim }
+      { 1em + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom-right:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { t } { r }
-      { 0pt } { -1em }
+      { 0pt + \l__textfigure_horizontal_sep_dim }
+      { -1em + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-left:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { l }
       #2 { b } { l }
-      { 0pt } { 1em }
+      { 0pt + \l__textfigure_horizontal_sep_dim }
+      { 1em + \l__textfigure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom-left:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { l }
       #2 { t } { l }
-      { 0pt } { -1em }
+      { 0pt + \l__textfigure_horizontal_sep_dim }
+      { -1em + \l__textfigure_vertical_sep_dim }
   }
 
 
