@@ -1,7 +1,7 @@
 % 由于使用了minted宏包排版代码，
 % 需要安装Python
 % 并命令行使用pip install Pygments安装Pygments库
-% 然后编译需要使用xelatex --shell-escape
+% 然后编译需要使用xelatex --shell-escape选项
 \documentclass{l3doc}
 \usepackage{ctex}
 \usepackage{hyperref}
@@ -11,12 +11,14 @@
 \usepackage{graphicx}
 \title{\bfseries text-figure宏包}
 \author{夏康玮\\ \path{kangweixia_xdyy@163.com}}
-\date{2022-01-22\quad v0.0.3 \thanks{\url{https://github.com/xkwxdyy/text-figure}\url{https://gitee.com/xkwxdyy/text-figure}}}
+\date{2022-01-22\quad v1.0.0 \thanks{\url{https://github.com/xkwxdyy/text-figure}} \thanks{\url{https://gitee.com/xkwxdyy/text-figure}}}
 
 \usepackage{minted}
 \setminted{formatcom=\xeCJKVerbAddon}
 \usepackage{sourcecodepro}
 \usepackage{xcolor}
+\usepackage{text-figure}
+\usepackage{choices}
 \usepackage{mwe}
 \makeatletter
 \newlength\savefboxrule
@@ -90,11 +92,13 @@
   }\\
   \fbox{%
     \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
+    % \begin{varwidth}{\hsize}%
       \setlength{\fboxrule}{\savefboxrule}%
       \setlength{\fboxsep}{\savefboxsep}%
       \setlength{\parskip}{1ex plus 0.4ex minus 0.2ex}%
       \normalsize\input{\example@name}%
     \end{minipage}%
+    % \end{varwidth}%
   }%
   \end{minipage}
   \endtrivlist
@@ -270,9 +274,10 @@
 \ExplSyntaxOn
 \NewDocumentCommand{ \remark }{ +m }{
   \group_begin:
-    \centering
+    \par \large
     \color{violet}
-    #1
+    作者注：
+      #1
   \group_end:
 }
 \ExplSyntaxOff
@@ -282,19 +287,362 @@
 \tableofcontents
 
 
-\section{宏包简介}
+\section{宏包简介与编写背景}
+数学试卷排版中会出现选择题、填空题或是解答题与图片一起排版的情况，
+但是图片的对齐往往是比较难处理的一项，考虑到 \cmd{coffin} 具有很好的对齐效果，于是基于 \LaTeX3 的 \cmd{coffin} 模块编写了这个宏包，主要提供了 \tn{textfigure} 命令，使用详情请看 section \ref{sec:命令说明}。
 
 
-\section{命令环境说明}
+\section{注意事项}
+
+\begin{enumerate}
+  \item \tn{textfigure} 命令本身因为要排版文字而编写的，但是本身也可以用输入文本文字等其他内容，可以看成是一个将 \cmd{coffin} 对齐操作包装了的命令；
+  \item 本命令并没有图片绕排效果，如果非要绕排，请使用 \pkg{wrapfig} 等绕排宏包，但是由于本 \pkg{text-figure} 宏包的 \tn{textfigure} 命令本身是针对一道题的，所以和绕排宏包并不冲突，完全可以一起使用，即需要绕排用绕排，不需要绕排时使用 \tn{textfigure} 命令排版会方便；
+  \item 考虑到用户可能使用的插图命令不同（比如 \tn{includegraphics} 或 \tn{includesvg} 等），且不同的命令可能有不同的可选参数设置，综上考虑没有将插图命令包装进 \tn{textfigure} 命令，也就是用户需要手动输入 \tn{includegraphics} 或 \tn{includesvg} 等命令来插图；
+\end{enumerate}
+
+\section{命令说明}\label{sec:命令说明}
 
 
-\subsection{命令}
-\begin{function}{foo}
+\subsection{命令介绍}
+
+\begin{function}[added = 2022-01-22]{ \textfigure }
   \begin{syntax}
-
+    |\textfigure| \oarg{\kvopt{\meta{key}}{\meta{val}}} \marg{content} \marg{figure}
   \end{syntax}
+  \oarg{\kvopt{\meta{key}}{\meta{val}}} 指键值设置，\marg{content}指作为主体的文本，\marg{figure}输入插入图片的命令或其他文本。
+  \remark{
+    \marg{figure} 里可以输入插图命令以外的命令或纯文本文字，因为这个命令是基于前面提到的背景研发的，但是功能要更广。只是要注意在用 \cmd{fig-pos = \meta{postion} } 键值调整对齐方式（下面会详细介绍键值列表）的时候 \meta{position} 是 \meta{content} 不动，\meta{figure} 相对于 \meta{content} 的位置进行设计的（用户可以看下面的示例或者自己尝试使用一下，很快就会有体会）。但是下面为了说明方便，还是用 \meta{content} 指代第一个必选参数的内容，\meta{figure} 指代第二个必选参数的内容。
+  }
 \end{function}
 
-\subsection{环境}
+\begin{function}[added = 2022-01-22]{\textfiguresetup}
+  \begin{syntax}
+    |\textfiguresetup| = \marg{\kvopt{\meta{key}}{\meta{val}}}
+  \end{syntax}
+  放在导言区的全局键值设置命令。
+\end{function}
+
+
+
+\subsection{键值列表}
+下面介绍 \tn{textfigure} 命令的键值列表
+\begin{function}[added = 2022-01-22, updated = 2022-01-22]{fig-pos}
+  \begin{syntax}
+    |fig-pos| = \meta{postion} \init{bottom-right}
+  \end{syntax}
+  设置 \meta{figure} 相对于 \meta{content}的位置，共有下面几个位置：
+    \remark{注意下面所说的“图片”是指 \meta{figure} 的内容，可以不是图片（前文已经解释过），但是为了叙述方便还是说是“图片”，而 \meta{content} 是“文本”}
+    \begin{itemize}
+      \item top：图片在文本上方
+      \item bottom：图片在文本下方
+      \item left：图片在文本左边，垂直中心对齐
+      \item right：图片在文本右边，垂直中心对齐
+      \item top-left：图片在文本的左上方
+      \item top-right：图片在文本的右上方
+      \item bottom-left：图片在文本的左下方
+      \item bottom-right：图片在文本的右下方
+      \item left-top：图片在文本左边，顶部对齐
+      \item left-center：等价于left
+      \item left-bottom：图片在文本左边，底部对齐
+      \item right-top：图片在文本右边边，顶部对齐
+      \item right-center：等价于right
+      \item right-bottom：图片在文本右边，底部对齐
+    \end{itemize}
+  可能用户注意到了 \meta{position} 里面有几个特别像，比如 \cmd{top-right} 和 \cmd{right-top}，它们的区别和联系，以及如果理解这样命名，会在后面的示例中进行说明
+\end{function}
+
+
+\begin{function}[added = 2022-01-22]{hsep, vsep}
+  \begin{syntax}
+    |hsep| = \meta{dimension} \init{0pt}
+    |vsep| = \meta{dimension} \init{0pt}
+  \end{syntax}
+  \cmd{hsep} 和 \cmd{vsep} 分别表示图片的水平和垂直方向的额外偏移量，如果有部分图片的位置不满意可以在命令可选参数中手动调整，如果全都不满意，可以使用 \tn{textfiguresetup} 命令在导言区全局调整。
+\end{function}
+
+
+\begin{function}[added = 2022-01-22]{text-width, figure-width}
+  \begin{syntax}
+    |text-width| = \meta{dimension} \init{\hsize}
+    |figure-width| = \meta{dimension} \init{\hsize}
+  \end{syntax}
+  文本和图片都置于 \env{varwidth} 环境中，\cmd{text-width} 和 \cmd{figure-width} 分别用来设置文本的 \env{varwidth} 环境宽度和图片的 \env{varwidth} 环境宽度。效果就是如果内容是文本的话就是文本盒子的宽度，如果是用 \tn{includegraphics} 等命令插入的图片，则以 \tn{includegraphics} 设置的宽度为主。
+\end{function}
+
+
+\begin{function}[added = 2022-01-22]{text-ratio}
+  \begin{syntax}
+    |text-ratio| = <fp number>
+  \end{syntax}
+  调整文本宽度占行宽的比例，取值为 $0-1$。当 \cmd{fig-pos} 为 \cmd{left}, \cmd{right}, \cmd{left-top}, \cmd{left-bottom}, \cmd{right-top}, \cmd{righ-bottom} 时会自动设置为 $0.7$，其余设置为 $1$， 最终以用户手动输入的为主。
+  \remark{
+    如果同时设置了 \cmd{text-width} 和 \cmd{text-ratio}，则以最终效果为 \cmd{text-width} 的设置。
+  }
+\end{function}
+
+
+\section{示例}
+\remark{
+  注意下面的效果图的尾部会多出一部分是因为示例环境的关系，正常使用是不会的：
+}
+
+\fbox{
+  \textfigure[fig-pos = right]{
+    “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+  }{
+    \includegraphics[width = 2cm]{example-image-a}
+  }
+}
+
+
+
+\subsection{\cmd{right} 系列}
+
+\begin{vexample}
+    \textfigure[fig-pos = right]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right-top]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right-bottom]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+
+
+\subsection{\cmd{left} 系列}
+
+\begin{vexample}
+    \textfigure[fig-pos = left]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = left-top]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = left-bottom]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+
+
+\subsection{\cmd{top} 系列}
+
+\begin{vexample}
+    \textfigure[fig-pos = top-left]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = top-right]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+
+
+
+\subsection{\cmd{bottom} 系列}
+
+\begin{vexample}
+  \textfigure[fig-pos = bottom-left]{
+    “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+  }{
+    \includegraphics[width = 2cm]{example-image-a}
+  }
+\end{vexample}
+
+\begin{vexample}
+  \textfigure[fig-pos = bottom-right]{
+    “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+  }{
+    \includegraphics[width = 2cm]{example-image-a}
+  }
+\end{vexample}
+
+\remark{
+  \cmd{bottom-right} 也是 \cmd{fig-pos} 的默认值。
+}
+
+
+\subsection{ \cmd{fig-pos} 总结}
+
+从上面的 \cmd{fig-pos} 示例可以看出，其实很容易记住这些方位，拿 \meta{pos1}-\meta{pos2}为例：
+  \begin{itemize}
+    \item \meta{pos1} 其实就是图片整体在文本的位置，就是上下左右四个位置
+    \item \meta{pos2} 是位置的细节，比如 \meta{pos1} 为 \cmd{top}, \cmd{bottom} 的时候 \meta{pos2} 就是左右（ \cmd{left}, \cmd{right} ），\meta{pos1} 为 \cmd{left}, \cmd{right} 的时候 \meta{pos2} 就是上中下（或顶部中部底部），即 \cmd{top}, \cmd{center}, \cmd{bottom}， 特别地 \cmd{center} 可以省略，即 \cmd{right} 为 \cmd{right-center} 的效果
+  \end{itemize}
+
+
+
+\subsection{ \cmd{text-ratio} 和 \cmd{text-width} }
+
+
+
+\subsubsection{ \cmd{text-ratio} 的作用 }
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-ratio = 0.3]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-ratio = 0.5]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-ratio = 0.7]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-ratio = 0.5, text-width = 8cm]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+
+\subsubsection{ \cmd{text-width} 的作用 }
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-width = 6cm]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-width = 10cm]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+
+
+\subsubsection{ \cmd{text-ratio} 和 \cmd{text-width} 同时使用}
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-ratio = 0.5]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = right, text-ratio = 0.5, text-width = 8cm]{
+      “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+    }{
+      \includegraphics[width = 2cm]{example-image-a}
+    }
+\end{vexample}
+
+
+
+\section{试卷排版示例}
+
+
+\subsection{选择题}
+
+\begin{enumerate}
+  \item \textfigure[fig-pos = bottom]{
+    如图, 网格纸上小正方形的边长为 $1$ , 粗实线画出的是某几何体的三视图, 该几何体由一平面将一圆柱截去一部分后所得, 则该几何体的体积为 ( )
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+    \choices{
+      $90\pi$ &&
+      $63\pi$ &&
+      $42\pi$ &&
+      $36\pi$ &&
+    }
+\end{enumerate}
+
+
+\subsection{填空题}
+
+\begin{enumerate}[start = 11]
+  \item \textfigure[fig-pos = right-top]{
+    执行如图的程序框图, 如果输入的 $a = -1$, 则输出的 $S = \underline{\qquad}$
+  }{
+    \includegraphics[height = 3cm]{example-image-a}
+  }
+\end{enumerate}
+
+
+
+\subsection{解答题}
+
+\begin{enumerate}[start = 18]
+  \item 
+    如图, 在平面直角坐标系 $x O y$ 中, 椭圆 $C$ 过点 $\left(\sqrt{3}, \frac{1}{2}\right)$, 焦点为 $F_{1}(-\sqrt{3}, 0), F_{2}(\sqrt{3}, 0)$, 圆 $O$ 的直径为 $F_{1} F_{2}$.
+    \begin{enumerate}
+      \item 求椭圆 $C$ 及圆 $O$ 的方程;
+      \item 设直线 $l$ 与圆 $O$ 相切于第一象限内的点 $P$.
+      \begin{enumerate}[]
+          \item 若直线 $l$ 与椭圆 $C$ 有且只有一个公共点, 求点 $P$ 的坐标;
+          \item
+            直线 $l$ 与椭圆 $C$ 交于 $A, B$ 两点. 若 $\triangle O A B$ 的面积为 $\frac{2 \sqrt{6}}{7}$, 求直 线 $l$ 的方程.   
+        \end{enumerate}
+    \end{enumerate}
+    
+  \item \textfigure{
+    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+    % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+      \begin{itemize}
+        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
+        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
+      \end{itemize}
+    }{
+      \includegraphics[width = 5cm]{example-image-a}
+    }
+\end{enumerate}
 
 \end{document}

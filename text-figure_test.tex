@@ -1,94 +1,51 @@
 \documentclass{ctexart}
-\usepackage{text-figure}
+\usepackage{varwidth}
 \usepackage{graphicx}
-\usepackage{choices}
+\usepackage{text-figure}
 
 \begin{document}
+\ExplSyntaxOn
+\coffin_new:N \l_test_coffin
 
+\hcoffin_set:Nn \l_test_coffin
+  {
+    \begin{varwidth}{\hsize}
+      如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+     如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+      % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+      \begin{itemize}
+        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
+        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
+      \end{itemize}
+    \end{varwidth}
+  }
+\hcoffin_set:Nn \l_tmpa_coffin
+  {
+    \begin{varwidth}{\hsize}
+      \includegraphics[width = 2cm]{example-image-a}
+    \end{varwidth}
+  }
+\coffin_join:NnnNnnnn
+  \l_test_coffin { b } { l }
+  \l_tmpa_coffin { t } { r }
+  { 0pt } { 0pt }
 \begin{enumerate}
-  \item \textfigure[fig-pos = right-top]{
-    某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-    % \choices{
-    %   1 &&
-    %   2 &&
-    %   3 &&
-    %   4 &&
-    % }
-  }{
-    \includegraphics[width = 2cm]{example-image-a}
-  }
-    \choices{
-      1 &&
-      2 &&
-      3 &&
-      4 &&
+  \item \coffin_typeset:Nnnnn 
+    \l_test_coffin { t } { l }
+    { 0pt } { 0.5\baselineskip }
+  \item \textfigure[]{
+    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+    % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+      \begin{itemize}
+        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
+        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
+      \end{itemize}
+    }{
+      \includegraphics[width = 5cm]{example-image-a}
     }
-  \item \textfigure[fig-pos = left-bottom]{
-    某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-    % \choices{
-    %   1 &&
-    %   2 &&
-    %   3 &&
-    %   4 &&
-    % }
-  }{
-    \includegraphics[width = 2cm]{example-image-a}
-  }
-    \choices{
-      1 &&
-      2 &&
-      3 &&
-      4 &&
-    }
-  
-  \item 某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-  
-  \textfigure[fig-pos = top]{
-    \choices{
-      1 &&
-      2 &&
-      3 &&
-      4 &&
-    }
-  }{
-    \includegraphics[width = 2cm]{example-image-a}
-  }
-
-  \item 某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-  
-  \textfigure[fig-pos = bottom]{
-    \choices{
-      1 &&
-      2 &&
-      3 &&
-      4 &&
-    }
-  }{
-    \includegraphics[width = 2cm]{example-image-a}
-  }
 \end{enumerate}
 
-\begin{enumerate}
-  \item \textfigure[fig-pos = bottom-right]{
-    某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-    }{
-      \includegraphics[width = 4cm]{example-image-a}
-    }
-  \item 
-  \textfigure[fig-pos = top-right]{
-    某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-    }{
-      \includegraphics[width = 4cm]{example-image-a}
-    }
-  \item \textfigure[fig-pos = top-left]{
-    某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-    }{
-      \includegraphics[width = 4cm]{example-image-a}
-    }
-  \item \textfigure[fig-pos = bottom-left]{
-    某工厂为提高生产效率,提出了完成某项生产任务的两种新的生产方式．为比较两种生产方式的效率，选取$40$名工人，将他们随机分成两组第 $i$ 组工人用第 $i$ 种生产方式．根据工人完成生产任务的工作时间绘制了如下茎叶图：
-    }{
-      \includegraphics[width = 4cm]{example-image-a}
-    }
-\end{enumerate}
+
+\ExplSyntaxOff
 \end{document}
