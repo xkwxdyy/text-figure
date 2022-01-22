@@ -6,7 +6,7 @@ LaTeX的试卷排版中，题干和图片排版一直以来是一个比较麻烦
 
 ## 宏包使用说明
 
-提供`\textfigure[<key>=<val>]{<content>}{<pic>}`
+提供`\textfigure[<key>=<val>]{<content>}{<figure or other content>}`
 
 - 由于不确定插图是以何种方式（如用`\includegraphics`或`\includesvg`等），而且插图命令可能有自己的一些参数，综合考虑还是用户自己使用插图命令
 
