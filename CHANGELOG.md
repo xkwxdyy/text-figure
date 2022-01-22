@@ -3,20 +3,22 @@
 [TODO]
 
 - 可以手动调整偏移量
-- anchor=west或者east的时候先自动调整ratio，然后可以被手动调整
-  - 问题在于要知道key-val设置了什么anchor才能判断
-  - 但是这个key-val设置和手动设置ratio是同一接口
-  - 理想是：
-    - 先用户设置anchor
-    - 然后自动判断是否是west或者east，并自动调整ratio
-    - 然后用户手动的话以手动的为准
+- anchor改为fig-pos
+- anchor的键值改掉：top-left，top，bottom，left，right
 
-### [v0.0.2] - 2022-01-22
+### [v0.0.3] - 2022-01-22
 
 #### Added
 
 - 可以调整图片的anchor
 - 可以调整文本的宽度或者占行距的比例
+- anchor=west或者east的时候先自动调整ratio，然后可以被手动调整
+
+### Changed
+
+- 调整anchor为fig-pos
+- 调整anchor的东南西北系列（east, south, west, north 及其组合）为fig-pos上下左右系列（top, bottom, left, right 及其组合）
+- 增加了left和right的top和bottom形式（top-right是右上，right-top是右边的顶部）
 
 ## 仓库地址
 

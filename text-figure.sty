@@ -1,0 +1,251 @@
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\RequirePackage{expl3}
+\ProvidesExplPackage {text-figure} {2022-01-22} {0.0.1}
+  {
+    A package for flexibly LaTeXing texts with figures in exampapers.
+    Kangwei Xia
+    <kangweixia_xdyy@163.com>
+  }
+\RequirePackage { xtemplate, l3keys2e, l3draw, xparse }
+\clist_map_inline:nn { xparse, xtemplate, l3keys2e }
+  {
+    \@ifpackagelater {#1} { 2018/05/12 }
+      { } { \msg_error:nnn { text-figure } { l3-too-old } {#1} }
+  }
+\@ifpackagelater {expl3} { 2021/11/12 }
+  { } { \msg_error:nnn { text-figure } { l3-too-old } {#1} }
+\msg_new:nnn { text-figure } { l3-too-old }
+  {
+    Package~ "#1"~ is~ too~ old. \\\\
+    Please~ update~ an~ up-to-date~ version~ of~ the~ bundles \\
+    "l3kernel"~ and~ "l3packages"~ using~ your~ TeX~ package \\
+    manager~ or~ from~ CTAN.
+  }
+\sys_if_engine_xetex:F
+  {
+    \sys_if_engine_luatex:F
+      {
+        \msg_fatal:nnx { choices } { unsupported-engine }
+          { \c_sys_engine_str }
+      }
+  }
+\msg_new:nnn { text-figure } { unsupported-engine }
+  {
+    The~ choice~ package~ requires~ either~ XeTeX~ or~ LuaTeX. \\\\
+    "#1"~ is~ not~ supported~ at~ present.~ You~ must~ change \\
+    your~ typesetting~ engine~ to~ "xelatex"~ or~ "lualatex".
+  }
+
+
+%%%% 宏包载入 %%%%
+\RequirePackage{ xcoffins }
+\RequirePackage{ varwidth }
+
+
+%%%% 设置变量 %%%%
+\coffin_new:N \l__textfigure_text_coffin        % 用于存文本
+\coffin_new:N \l__textfigure_figure_coffin         % 用于存图片
+
+\str_new:N \l__textfigure_current_fig_pos_str    % 用来存当前的anchor值
+
+\fp_new:N \l__textfigure_text_ratio_fp          % 文本的比例
+\dim_new:N \l__textfigure_text_width_dim        % 文本的宽度
+\dim_new:N \l__textfigure_tmpa_dim              % 临时变量
+
+\skip_new:N \l__textfigure_tmpa_skip            % 临时变量
+
+%%%% 定义键值 %%%%
+\keys_define:nn { text-figure }
+  {
+    % fig-pos为图片位于文本的方位
+    fig-pos .choices:nn =
+      { 
+        left , right , top , bottom ,
+        top-left , bottom-left ,
+        top-right , bottom-right ,
+        right-top , right-bottom ,
+        left-top , left-bottom
+      }
+      {
+        \str_set:NV \l__textfigure_current_fig_pos_str \l_keys_choice_tl
+        \str_case:VnT \l__textfigure_current_fig_pos_str
+          {
+            {left} {}
+            {right} {}
+            {right-top} {}
+            {right-bottom} {}
+            {left-top} {}
+            {left-bottom} {}
+          }
+          { \fp_set:Nn \l__textfigure_text_ratio_fp {0.7} }
+      },
+    fig-pos .initial:n = bottom-right,
+    % vsep：调整图片的垂直额外偏移量
+
+    % hsep：调整图片的水平额外偏移量
+
+    % text-width：手动设置文本coffin的宽度，默认为行宽
+    text-width .dim_set:N = \l__textfigure_text_width_dim,
+    text-width .initial:n = \hsize,
+    % text-ratio：文本coffin占行宽的比例，范围0-1
+    text-ratio .fp_set:N = \l__textfigure_text_ratio_fp,
+    text-ratio .initial:n = 1,
+    unknown .code:n = 
+      { \msg_error:nnn { text-figure } { unknown-option } {#1} }
+  }
+
+\msg_new:nnn { text-figure } { unknown-option }
+  { package~ option~ "\l_keys_key_tl"~ is~ unknown. }
+
+
+%%%% 定义函数 %%%%
+\cs_new:Npn \__textfigure_quad:  { \skip_horizontal:n { 1 em } }
+\cs_new:Npn \__textfigure_qquad: { \skip_horizontal:n { 2 em } }
+\cs_new_protected:Npn \__textfigure_vspace:N #1
+  {
+    \dim_set_eq:NN \l__textfigure_tmpa_dim \prevdepth
+    \hrule height \c_zero_dim
+    \nobreak
+    \skip_vertical:N #1
+    \skip_vertical:N \c_zero_skip
+    \dim_set_eq:NN \prevdepth \l__textfigure_tmpa_dim
+  }
+\cs_new_protected:Npn \__textfigure_vspace:n #1
+  {
+    \skip_set:Nn \l__textfigure_tmpa_skip {#1}
+    \__textfigure_vspace:N \l__textfigure_tmpa_skip
+  }
+
+% 【已解决】判断anchor是不是west或者east，是的话就自动调整调整一下text-ratio
+% - 问题在于要知道key-val设置了什么anchor才能判断
+% - 但是这个key-val设置和手动设置ratio是同一接口
+% - 理想是：
+%   - 先用户设置anchor
+%   - 然后自动判断是否是west或者east，并自动调整ratio
+%    【思考】其实也就是说anchor的时候要判断是否是east和west来设置ratio（关键）
+%   - 然后用户手动的话以手动的为准
+% 【解决关键】既然不可能中途处理，那只能在key-val设置的时候就要处理掉这个自动的ratio，所以重新设计了anchor键值代码
+
+
+% 最终的拼接命令
+\cs_new_protected:Npn \textfigure_output:nn #1#2
+  {
+    \dim_set:Nn \l__textfigure_text_width_dim
+      {
+        \l__textfigure_text_width_dim * \dim_ratio:nn { \fp_use:N \l__textfigure_text_ratio_fp pt } { 1 pt }
+      }
+    \hcoffin_set:Nn \l__textfigure_text_coffin 
+      {
+        \begin{varwidth}{ \l__textfigure_text_width_dim }
+          #1
+        \end{varwidth}
+      }
+    \hcoffin_set:Nn \l__textfigure_figure_coffin {#2}
+    \use:c { textfigure_fig_pos_set_ \l__textfigure_current_fig_pos_str :NN }
+      \l__textfigure_text_coffin
+      \l__textfigure_figure_coffin
+    \coffin_typeset:Nnnnn \l__textfigure_text_coffin
+      { t } { l }
+      { 0pt } { 0.5\baselineskip }
+    \vspace*{1em}
+  }
+
+
+% 用于\textfigure_output:nn的最终拼接
+\cs_new_protected:cpn { textfigure_fig_pos_set_top:NN } #1#2
+  {
+    \__textfigure_vspace:n {1em}
+    \coffin_join:NnnNnnnn
+      #1 { t } { hc }
+      #2 { H } { hc }
+      { 0pt } { 2em }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_bottom:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { H } { hc }
+      #2 { t } { hc }
+      { 0pt } { -2em }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_left:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { l }
+      #2 { vc } { r }
+      { -1em } { 0pt }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_left-top:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { t } { l }
+      #2 { t } { r }
+      { -1em } { 0pt }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_left-bottom:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { l }
+      #2 { b } { r }
+      { -1em } { 0pt }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_right-top:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { t } { r }
+      #2 { t } { l }
+      { 1em } { 0pt }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_right-bottom:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { r }
+      #2 { b } { l }
+      { 1em } { 0pt }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_right:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { vc } { r }
+      #2 { vc } { l }
+      { 1em } { 0pt }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_top-right:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { t } { r }
+      #2 { b } { r }
+      { 0pt } { 1em }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_bottom-right:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { r }
+      #2 { t } { r }
+      { 0pt } { -1em }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_top-left:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { t } { l }
+      #2 { b } { l }
+      { 0pt } { 1em }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_bottom-left:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { l }
+      #2 { t } { l }
+      { 0pt } { -1em }
+  }
+
+
+
+
+%%%% 用户命令接口 %%%%
+\NewDocumentCommand{ \textfigure }{ O{} +m m }
+  {
+    \group_begin:
+      \keys_set:nn { text-figure } {#1}
+      \textfigure_output:nn {#2} {#3}
+    \group_end:
+  }
