@@ -54,12 +54,21 @@
 
 \skip_new:N \l__textpic_tmpa_skip            % 临时变量
 
-
 %%%% 定义键值 %%%%
 \keys_define:nn { text-pic }
   {
     % anchor为图片位于文本的方位
-    anchor .str_set:N = \l__textpic_current_anchor_str,
+    anchor .choices:nn =
+      { north , south , east , west , northeast , northwest , southeast , southwest }
+      {
+        \str_set:NV \l__textpic_current_anchor_str \l_keys_choice_tl
+        \str_case:Vn \l__textpic_current_anchor_str
+          {
+            {east} { \fp_set:Nn \l__textpic_text_ratio_fp {0.7} }
+            {west} { \fp_set:Nn \l__textpic_text_ratio_fp {0.7} }
+          }
+      },
+    % anchor .str_set:N = \l__textpic_current_anchor_str,
     anchor .initial:n = southeast,
     % vsep：调整图片的垂直额外偏移量
 
@@ -97,21 +106,17 @@
     \__textpic_vspace:N \l__textpic_tmpa_skip
   }
 
-% 【待解决】判断anchor是不是west或者east，是的话就自动调整调整一下text-ratio
+% 【已解决】判断anchor是不是west或者east，是的话就自动调整调整一下text-ratio
 % - 问题在于要知道key-val设置了什么anchor才能判断
 % - 但是这个key-val设置和手动设置ratio是同一接口
 % - 理想是：
 %   - 先用户设置anchor
 %   - 然后自动判断是否是west或者east，并自动调整ratio
+%    【思考】其实也就是说anchor的时候要判断是否是east和west来设置ratio（关键）
 %   - 然后用户手动的话以手动的为准
-% \cs_new_protected:Npn \l__textpic_ratio_set:
-%   {
-%     \str_case:Vn \l__textpic_current_anchor_str
-%       {
-%         {east} { \fp_set:Nn \l__textpic_text_ratio_fp {0.7} }
-%         {west} { \fp_set:Nn \l__textpic_text_ratio_fp {0.7} }
-%       }
-%   }
+% 【解决关键】既然不可能中途处理，那只能在key-val设置的时候就要处理掉这个自动的ratio，所以重新设计了anchor键值代码
+
+
 % 最终的拼接命令
 \cs_new_protected:Npn \textpic_output:nn #1#2
   {
