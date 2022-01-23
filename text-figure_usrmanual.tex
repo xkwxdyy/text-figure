@@ -298,6 +298,7 @@
   \item \tn{textfigure} 命令本身因为要排版文字而编写的，但是本身也可以用输入文本文字等其他内容，可以看成是一个将 \cmd{coffin} 对齐操作包装了的命令；
   \item 本命令并没有图片绕排效果，如果非要绕排，请使用 \pkg{wrapfig} 等绕排宏包，但是由于本 \pkg{text-figure} 宏包的 \tn{textfigure} 命令本身是针对一道题的，所以和绕排宏包并不冲突，完全可以一起使用，即需要绕排用绕排，不需要绕排时使用 \tn{textfigure} 命令排版会方便；
   \item 考虑到用户可能使用的插图命令不同（比如 \tn{includegraphics} 或 \tn{includesvg} 等），且不同的命令可能有不同的可选参数设置，综上考虑没有将插图命令包装进 \tn{textfigure} 命令，也就是用户需要手动输入 \tn{includegraphics} 或 \tn{includesvg} 等命令来插图；
+  \item 本命令是基于 \cmd{coffin} 开发，本质是把两个内容放在两个 \cmd{coffin} 盒子里进行对齐，所以不可断页，但根据本人观察试卷排版，绝大部分都是图片和文本在同一页，（也有例外，比如选择题的图片排版，题干和图片不在同一页，这个灵活处理即可，要么就直接插图，要么就用将选择题选项作为 \meta{content} 和图片用 \tn{textfigure} 去对齐
 \end{enumerate}
 
 \section{命令说明}\label{sec:命令说明}
