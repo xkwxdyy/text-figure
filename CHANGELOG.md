@@ -1,6 +1,16 @@
 ## 更新日志
 
-[TODO]
+### [v0.1.0] - 2022-01-23
+### Added
+- 增加`figure-vsep`, `figure-hsep`控制图片偏移
+
+### Changed
+- 将原来的`vsep`, `hsep`改为了控制整体的偏移
+
+
+#### Fixed
+
+- 解决coffin内有list环境，外套一个list环境后出现的label对齐问题 [#I4RVQX](https://gitee.com/xkwxdyy/text-figure/issues/I4RVQX)
 
 ### [v0.0.4] - 2022-01-22
 

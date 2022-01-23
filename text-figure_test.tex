@@ -1,21 +1,19 @@
-\documentclass{ctexart}
+\documentclass{article}
 \usepackage{varwidth}
 \usepackage{graphicx}
-\usepackage{text-figure}
+\usepackage{lipsum}
+
 
 \begin{document}
 \ExplSyntaxOn
-\coffin_new:N \l_test_coffin
-
-\hcoffin_set:Nn \l_test_coffin
+\coffin_new:N \l_test_a_coffin
+\coffin_new:N \l_test_b_coffin
+\hcoffin_set:Nn \l_test_b_coffin
   {
     \begin{varwidth}{\hsize}
-      如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-     如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-      % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+      \lipsum[1]
       \begin{itemize}
-        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
-        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
+        \item what~I~want
       \end{itemize}
     \end{varwidth}
   }
@@ -26,26 +24,38 @@
     \end{varwidth}
   }
 \coffin_join:NnnNnnnn
-  \l_test_coffin { b } { r }
+  \l_test_b_coffin { b } { r }
   \l_tmpa_coffin { t } { r }
   { 0pt } { 0pt }
 \begin{enumerate}
-  \item \coffin_typeset:Nnnnn 
-    \l_test_coffin { t } { l }
+  \item 
+  \coffin_typeset:Nnnnn 
+    \l_test_b_coffin { t } { l }
     { 0pt } { 0.5\baselineskip }
-  \item \textfigure[]{
-    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-    % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-      \begin{itemize}
-        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
-        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
-      \end{itemize}
-    }{
-      \includegraphics[width = 5cm]{example-image-a}
+  \item \mode_leave_vertical:
+    % \begin{varwidth}{\hsize}
+      \hcoffin_set:Nn \l_test_a_coffin
+    {
+      \begin{varwidth}{\hsize}
+        \lipsum[1]
+        \begin{itemize}
+          \item what~I~don't~want!
+        \end{itemize}
+      \end{varwidth}
     }
+  \hcoffin_set:Nn \l_tmpa_coffin
+    {
+      \begin{varwidth}{\hsize}
+        \includegraphics[width = 2cm]{example-image-a}
+      \end{varwidth}
+    }
+  \coffin_join:NnnNnnnn
+    \l_test_a_coffin { b } { r }
+    \l_tmpa_coffin { t } { r }
+    { 0pt } { 0pt }
+  \coffin_typeset:Nnnnn 
+    \l_test_a_coffin { t } { l }
+    { 0pt } { 0.5\baselineskip }
 \end{enumerate}
-
-
 \ExplSyntaxOff
 \end{document}
