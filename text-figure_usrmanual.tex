@@ -11,7 +11,7 @@
 \usepackage{graphicx}
 \title{\bfseries text-figure宏包}
 \author{夏康玮\\ \path{kangweixia_xdyy@163.com}}
-\date{2022-01-22\quad v1.0.0 \thanks{\url{https://github.com/xkwxdyy/text-figure}} \thanks{\url{https://gitee.com/xkwxdyy/text-figure}}}
+\date{2022-01-23\quad v1.0.0 \thanks{\url{https://github.com/xkwxdyy/text-figure}} \thanks{\url{https://gitee.com/xkwxdyy/text-figure}}}
 
 \usepackage{minted}
 \setminted{formatcom=\xeCJKVerbAddon}
@@ -353,10 +353,18 @@
 \end{function}
 
 
-\begin{function}[added = 2022-01-22]{hsep, vsep}
+\begin{function}[added = 2022-01-22, updated = 2022-01-23]{hsep, vsep}
   \begin{syntax}
     |hsep| = \meta{dimension} \init{0pt}
     |vsep| = \meta{dimension} \init{0pt}
+  \end{syntax}
+  \cmd{hsep} 和 \cmd{vsep} 分别表示整体的水平和垂直方向的额外偏移量，如果有部分整体的位置不满意可以在命令可选参数中手动调整，如果全都不满意，可以使用 \tn{textfiguresetup} 命令在导言区全局调整。
+\end{function}
+
+\begin{function}[added = 2022-01-23]{figure-hsep, figure-vsep}
+  \begin{syntax}
+    |figure-hsep| = \meta{dimension} \init{0pt}
+    |figure-vsep| = \meta{dimension} \init{0pt}
   \end{syntax}
   \cmd{hsep} 和 \cmd{vsep} 分别表示图片的水平和垂直方向的额外偏移量，如果有部分图片的位置不满意可以在命令可选参数中手动调整，如果全都不满意，可以使用 \tn{textfiguresetup} 命令在导言区全局调整。
 \end{function}
@@ -621,29 +629,30 @@
 \subsection{解答题}
 
 \begin{enumerate}[start = 18]
-  \item 
+  \item \textfigure{
+    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
+      \begin{enumerate}
+        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
+        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
+      \end{enumerate}
+    }{
+      \includegraphics[width = 5cm]{example-image-a}
+    }
+  \item \textfigure[vsep = 0.2\baselineskip]{
+  % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
     如图, 在平面直角坐标系 $x O y$ 中, 椭圆 $C$ 过点 $\left(\sqrt{3}, \frac{1}{2}\right)$, 焦点为 $F_{1}(-\sqrt{3}, 0), F_{2}(\sqrt{3}, 0)$, 圆 $O$ 的直径为 $F_{1} F_{2}$.
     \begin{enumerate}
       \item 求椭圆 $C$ 及圆 $O$ 的方程;
       \item 设直线 $l$ 与圆 $O$ 相切于第一象限内的点 $P$.
-      \begin{enumerate}[]
+      \begin{enumerate}
           \item 若直线 $l$ 与椭圆 $C$ 有且只有一个公共点, 求点 $P$ 的坐标;
           \item
             直线 $l$ 与椭圆 $C$ 交于 $A, B$ 两点. 若 $\triangle O A B$ 的面积为 $\frac{2 \sqrt{6}}{7}$, 求直 线 $l$ 的方程.   
         \end{enumerate}
     \end{enumerate}
-    
-  \item \textfigure{
-    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-    如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-    % 如图, 在正三棱柱 $A B C-A_{1} B_{1} C_{1}$ 中, $A B=A A_{1}=2$, 点 $P, Q$ 分别为 $A_{1} B_{1}, B C$ 的中点.
-      \begin{itemize}
-        \item 求异面直线 $B P$ 与 $A C_{1}$ 所成角的余弦值;
-        \item 求直线 $C C_{1}$ 与平面 $A Q C_{1}$ 所成角的正弦值.
-      \end{itemize}
-    }{
-      \includegraphics[width = 5cm]{example-image-a}
-    }
+  }{
+    \includegraphics[width = 5cm]{example-image-a}
+  }
 \end{enumerate}
 
 \end{document}

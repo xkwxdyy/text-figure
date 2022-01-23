@@ -53,8 +53,10 @@
 \dim_new:N \l__textfigure_text_width_dim        % 文本的宽度
 \dim_new:N \l__textfigure_figure_width_dim      % 图片的varwidth环境的宽度
 \dim_new:N \l__textfigure_tmpa_dim              % 临时变量
-\dim_new:N \l__textfigure_horizontal_sep_dim    % 水平偏移量
-\dim_new:N \l__textfigure_vertical_sep_dim      % 垂直偏移量
+\dim_new:N \l__textfigure_figure_horizontal_sep_dim    % 图片水平偏移量
+\dim_new:N \l__textfigure_figure_vertical_sep_dim      % 图片垂直偏移量
+\dim_new:N \l__textfigure_horizontal_sep_dim    % 整体水平偏移量
+\dim_new:N \l__textfigure_vertical_sep_dim      % 整体垂直偏移量
 
 \skip_new:N \l__textfigure_tmpa_skip            % 临时变量
 
@@ -86,10 +88,16 @@
           { \fp_set:Nn \l__textfigure_text_ratio_fp {0.7} }
       },
     fig-pos .initial:n = bottom-right,
-    % vsep：调整图片的垂直额外偏移量
+    % figure-vsep：调整图片的垂直额外偏移量
+    figure-vsep .dim_set:N = \l__textfigure_figure_vertical_sep_dim,
+    figure-vsep .initial:n = 0pt,
+    % figure-hsep：调整图片的水平额外偏移量
+    figure-hsep .dim_set:N = \l__textfigure_figure_horizontal_sep_dim,
+    figure-hsep .initial:n = 0pt,
+    % vsep：调整整体的垂直额外偏移量
     vsep .dim_set:N = \l__textfigure_vertical_sep_dim,
     vsep .initial:n = 0pt,
-    % hsep：调整图片的水平额外偏移量
+    % hsep：调整整体的水平额外偏移量
     hsep .dim_set:N = \l__textfigure_horizontal_sep_dim,
     hsep .initial:n = 0pt,
     % text-width：手动设置文本的varwidth环境的宽度
@@ -145,6 +153,10 @@
       {
         \l__textfigure_text_width_dim * \dim_ratio:nn { \fp_use:N \l__textfigure_text_ratio_fp pt } { 1 pt }
       }
+    % issue：https://gitee.com/xkwxdyy/text-figure/issues/I4RVQX
+    % 关键点在于要离开垂直模式
+    % https://ask.latexstudio.net/ask/question/7238.html
+    \mode_leave_vertical:
     \hcoffin_set:Nn \l__textfigure_text_coffin 
       {
         \begin{varwidth}{ \l__textfigure_text_width_dim }
@@ -162,7 +174,8 @@
       \l__textfigure_figure_coffin
     \coffin_typeset:Nnnnn \l__textfigure_text_coffin
       { t } { l }
-      { 0pt } { 0.5\baselineskip }
+      { \l__textfigure_horizontal_sep_dim } 
+      { 0.5\baselineskip + \l__textfigure_vertical_sep_dim }
     \vspace*{1em}
   }
 
@@ -174,112 +187,112 @@
     \coffin_join:NnnNnnnn
       #1 { t } { hc }
       #2 { b } { hc }
-      { \l__textfigure_horizontal_sep_dim } 
-      { 2em + \l__textfigure_vertical_sep_dim }
+      { \l__textfigure_figure_horizontal_sep_dim } 
+      { 2em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { hc }
       #2 { t } { hc }
-      { \l__textfigure_horizontal_sep_dim }
-      { -2em + \l__textfigure_vertical_sep_dim }
+      { \l__textfigure_figure_horizontal_sep_dim }
+      { -2em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { l }
       #2 { vc } { r }
-      { -1em + \l__textfigure_horizontal_sep_dim }
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { -1em + \l__textfigure_figure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left-center:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { l }
       #2 { vc } { r }
-      { -1em + \l__textfigure_horizontal_sep_dim }
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { -1em + \l__textfigure_figure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left-top:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { l }
       #2 { t } { r }
-      { -1em + \l__textfigure_horizontal_sep_dim }
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { -1em + \l__textfigure_figure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_left-bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { l }
       #2 { b } { r }
-      { -1em + \l__textfigure_horizontal_sep_dim } 
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { -1em + \l__textfigure_figure_horizontal_sep_dim } 
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right-top:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { r }
       #2 { t } { l }
-      { 1em + \l__textfigure_horizontal_sep_dim }
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { 1em + \l__textfigure_figure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right-center:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { r }
       #2 { vc } { l }
-      { 1em + \l__textfigure_horizontal_sep_dim } 
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { 1em + \l__textfigure_figure_horizontal_sep_dim } 
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right-bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { b } { l }
-      { 1em + \l__textfigure_horizontal_sep_dim }
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { 1em + \l__textfigure_figure_horizontal_sep_dim }
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_right:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { vc } { r }
       #2 { vc } { l }
-      { 1em + \l__textfigure_horizontal_sep_dim } 
-      { 0pt + \l__textfigure_vertical_sep_dim }
+      { 1em + \l__textfigure_figure_horizontal_sep_dim } 
+      { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-right:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { r }
       #2 { b } { r }
-      { 0pt + \l__textfigure_horizontal_sep_dim }
-      { 1em + \l__textfigure_vertical_sep_dim }
+      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { 1em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom-right:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { t } { r }
-      { 0pt + \l__textfigure_horizontal_sep_dim }
-      { -1em + \l__textfigure_vertical_sep_dim }
+      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { -1em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-left:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { t } { l }
       #2 { b } { l }
-      { 0pt + \l__textfigure_horizontal_sep_dim }
-      { 1em + \l__textfigure_vertical_sep_dim }
+      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { 1em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom-left:NN } #1#2
   {
     \coffin_join:NnnNnnnn
       #1 { b } { l }
       #2 { t } { l }
-      { 0pt + \l__textfigure_horizontal_sep_dim }
-      { -1em + \l__textfigure_vertical_sep_dim }
+      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { -1em + \l__textfigure_figure_vertical_sep_dim }
   }
 
 
