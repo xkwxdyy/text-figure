@@ -1,16 +1,18 @@
 ## 更新日志
 
 ### [v0.1.1] - 2022-01-25
+#### Changed
+- 将`expl3`宏包的检测改为2020/03/03
 
 #### Fixed
 - 修复msg的bug
 
 
 ### [v0.1.0] - 2022-01-23
-### Added
+#### Added
 - 增加`figure-vsep`, `figure-hsep`控制图片偏移
 
-### Changed
+#### Changed
 - 将原来的`vsep`, `hsep`改为了控制整体的偏移
 
 
