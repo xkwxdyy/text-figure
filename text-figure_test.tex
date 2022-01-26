@@ -1,61 +1,18 @@
-\documentclass{article}
-\usepackage{varwidth}
+\documentclass{ctexart}
+\usepackage{text-figure}
+\usepackage{choices}
 \usepackage{graphicx}
-\usepackage{lipsum}
-
 
 \begin{document}
-\ExplSyntaxOn
-\coffin_new:N \l_test_a_coffin
-\coffin_new:N \l_test_b_coffin
-\hcoffin_set:Nn \l_test_b_coffin
-  {
-    \begin{varwidth}{\hsize}
-      \lipsum[1]
-      \begin{itemize}
-        \item what~I~want
-      \end{itemize}
-    \end{varwidth}
+\textfigure[text-ratio = 0.5, fig-pos = right]{
+  如图, 网格纸上小正方形的边长为 $1$ , 粗实线画出的是某几何体的三视图, 该几何体由一平面将一圆柱截去一部分后所得, 则该几何体的体积为 ( )
+}{
+  \includegraphics[width = 3cm]{example-image-a}
+}
+  \choices{
+    $90\pi$ &&
+    $63\pi$ &&
+    $42\pi$ &&
+    $36\pi$ &&
   }
-\hcoffin_set:Nn \l_tmpa_coffin
-  {
-    \begin{varwidth}{\hsize}
-      \includegraphics[width = 2cm]{example-image-a}
-    \end{varwidth}
-  }
-\coffin_join:NnnNnnnn
-  \l_test_b_coffin { b } { r }
-  \l_tmpa_coffin { t } { r }
-  { 0pt } { 0pt }
-\begin{enumerate}
-  \item 
-  \coffin_typeset:Nnnnn 
-    \l_test_b_coffin { t } { l }
-    { 0pt } { 0.5\baselineskip }
-  \item \mode_leave_vertical:
-    % \begin{varwidth}{\hsize}
-      \hcoffin_set:Nn \l_test_a_coffin
-    {
-      \begin{varwidth}{\hsize}
-        \lipsum[1]
-        \begin{itemize}
-          \item what~I~don't~want!
-        \end{itemize}
-      \end{varwidth}
-    }
-  \hcoffin_set:Nn \l_tmpa_coffin
-    {
-      \begin{varwidth}{\hsize}
-        \includegraphics[width = 2cm]{example-image-a}
-      \end{varwidth}
-    }
-  \coffin_join:NnnNnnnn
-    \l_test_a_coffin { b } { r }
-    \l_tmpa_coffin { t } { r }
-    { 0pt } { 0pt }
-  \coffin_typeset:Nnnnn 
-    \l_test_a_coffin { t } { l }
-    { 0pt } { 0.5\baselineskip }
-\end{enumerate}
-\ExplSyntaxOff
 \end{document}

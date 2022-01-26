@@ -74,18 +74,21 @@
       }
       {
         \str_set:NV \l__textfigure_current_fig_pos_str \l_keys_choice_tl
-        \str_case:VnT \l__textfigure_current_fig_pos_str
+        \fp_compare:nNnF { \l__textfigure_text_ratio_fp } < { 1 }
           {
-            {left} {}
-            {right} {}
-            {left-center} {}
-            {right-center} {}
-            {right-top} {}
-            {right-bottom} {}
-            {left-top} {}
-            {left-bottom} {}
+            \str_case:VnT \l__textfigure_current_fig_pos_str
+              {
+                {left} {}
+                {right} {}
+                {left-center} {}
+                {right-center} {}
+                {right-top} {}
+                {right-bottom} {}
+                {left-top} {}
+                {left-bottom} {}
+              }
+              { \fp_set:Nn \l__textfigure_text_ratio_fp {0.7} }
           }
-          { \fp_set:Nn \l__textfigure_text_ratio_fp {0.7} }
       },
     fig-pos .initial:n = right-top,
     % figure-vsep：调整图片的垂直额外偏移量

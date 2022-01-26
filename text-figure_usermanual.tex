@@ -386,8 +386,7 @@
   调整文本宽度占行宽的比例，取值为 $0-1$。当 \cmd{fig-pos} 为 \cmd{left}, \cmd{right}, \cmd{left-top}, \cmd{left-bottom}, \cmd{right-top}, \cmd{righ-bottom} 时会自动设置为 $0.7$，其余设置为 $1$， 最终以用户手动输入的为主。
   \remark{
     如果同时设置了 \cmd{text-width} 和 \cmd{text-ratio}，则以最终效果为 \cmd{text-width} 的设置。
-
-    如果是 \cmd{fig-pos = left-*} 或 \cmd{fig-pos = right-*} 和 \cmd{text-ratio} 同时使用，\cmd{text-ratio} 必须放在 \cmd{fig-pos} 设置的后面，否则手动的 \cmd{text-ratio} 的设置会被 \cmd{fig-pos = left-*} 或 \cmd{fig-pos = right-*} 内部的  \cmd{text-ratio} 自动设置覆盖
+    % 如果是 \cmd{fig-pos = left-*} 或 \cmd{fig-pos = right-*} 和 \cmd{text-ratio} 同时使用，\cmd{text-ratio} 必须放在 \cmd{fig-pos} 设置的后面，否则手动的 \cmd{text-ratio} 的设置会被 \cmd{fig-pos = left-*} 或 \cmd{fig-pos = right-*} 内部的  \cmd{text-ratio} 自动设置覆盖
   }
 \end{function}
 
