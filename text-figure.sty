@@ -53,6 +53,8 @@
 \dim_new:N \l__textfigure_text_width_dim            % 文本的宽度
 \dim_new:N \l__textfigure_text_coffin_width_dim     % 文本coffin的宽度
 \dim_new:N \l__textfigure_figure_width_dim      % 图片的varwidth环境的宽度
+% 用于top-center, top-right, bottom-center, bottom-right的水平偏移量储存
+\dim_new:N \l__textfigure_figure_coffin_horizontal_transform_dim
 \dim_new:N \l__textfigure_tmpa_dim              % 临时变量
 \dim_new:N \l__textfigure_figure_horizontal_sep_dim    % 图片水平偏移量
 \dim_new:N \l__textfigure_figure_vertical_sep_dim      % 图片垂直偏移量
@@ -69,6 +71,7 @@
       { 
         left , right , top , bottom ,
         top-left , top-right , top-center ,
+        top-flushright , bottom-flushright , 
         bottom-left , bottom-right , bottom-center ,
         right-top , right-bottom , right-center ,
         left-top , left-bottom , left-center
@@ -185,6 +188,7 @@
 
 
 % 用于\textfigure_output:nn的最终拼接
+% top表示位于文本正上方
 \cs_new_protected:cpn { textfigure_fig_pos_set_top:NN } #1#2
   {
     \vspace*{1em}
@@ -194,23 +198,46 @@
       { \l__textfigure_figure_horizontal_sep_dim } 
       { 2em + \l__textfigure_figure_vertical_sep_dim }
   }
+% top-center表示位于文本上方，但是处于水平的中线处
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-center:NN } #1#2
   {
     \vspace*{1em}
+    \dim_set:Nn \l__textfigure_text_coffin_width_dim
+      {
+        \coffin_wd:N #1
+      }
+    \dim_set:Nn \l__textfigure_figure_coffin_horizontal_transform_dim
+      {
+        \linewidth * \dim_ratio:nn { 1 pt } { 2 pt } 
+        - 
+        \l__textfigure_text_coffin_width_dim * \dim_ratio:nn { 1 pt } { 2 pt } 
+      }
     \coffin_join:NnnNnnnn
       #1 { t } { hc }
       #2 { b } { hc }
-      { \l__textfigure_figure_horizontal_sep_dim } 
+      { \l__textfigure_figure_coffin_horizontal_transform_dim + \l__textfigure_figure_horizontal_sep_dim } 
       { 2em + \l__textfigure_figure_vertical_sep_dim }
   }
+% bottom-center表示位于文本下方，但是处于水平的中线处
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom-center:NN } #1#2
   {
+    \dim_set:Nn \l__textfigure_text_coffin_width_dim
+      {
+        \coffin_wd:N #1
+      }
+    \dim_set:Nn \l__textfigure_figure_coffin_horizontal_transform_dim
+      {
+        \linewidth * \dim_ratio:nn { 1 pt } { 2 pt } 
+        - 
+        \l__textfigure_text_coffin_width_dim * \dim_ratio:nn { 1 pt } { 2 pt } 
+      }
     \coffin_join:NnnNnnnn
       #1 { b } { hc }
       #2 { t } { hc }
-      { \l__textfigure_figure_horizontal_sep_dim }
+      { \l__textfigure_figure_coffin_horizontal_transform_dim + \l__textfigure_figure_horizontal_sep_dim }
       { -2em + \l__textfigure_figure_vertical_sep_dim }
   }
+% bottom表示位于文本正下方
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom:NN } #1#2
   {
     \coffin_join:NnnNnnnn
@@ -283,28 +310,63 @@
       { 1em + \l__textfigure_figure_horizontal_sep_dim } 
       { 0pt + \l__textfigure_figure_vertical_sep_dim }
   }
-\cs_new_protected:cpn { textfigure_fig_pos_set_top-right:NN } #1#2
+% top-flushright：文本上方，水平方向是在行尾
+\cs_new_protected:cpn { textfigure_fig_pos_set_top-flushright:NN } #1#2
   {
     \dim_set:Nn \l__textfigure_text_coffin_width_dim
       {
         \coffin_wd:N #1
+      }
+    \dim_set:Nn \l__textfigure_figure_coffin_horizontal_transform_dim
+      {
+        \linewidth - \l__textfigure_text_coffin_width_dim
       }
     \coffin_join:NnnNnnnn
       #1 { t } { r }
       #2 { b } { r }
-      { \linewidth - \l__textfigure_text_coffin_width_dim + \l__textfigure_figure_horizontal_sep_dim }
+      { \l__textfigure_figure_coffin_horizontal_transform_dim  + \l__textfigure_figure_horizontal_sep_dim }
       { 1em + \l__textfigure_figure_vertical_sep_dim }
   }
-\cs_new_protected:cpn { textfigure_fig_pos_set_bottom-right:NN } #1#2
+\cs_new_protected:cpn { textfigure_fig_pos_set_top-right:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { t } { r }
+      #2 { b } { r }
+      { \l__textfigure_figure_horizontal_sep_dim }
+      { 1em + \l__textfigure_figure_vertical_sep_dim }
+  }
+% bottom-flushright：文本下方，水平方向在行尾
+\cs_new_protected:cpn { textfigure_fig_pos_set_bottom-flushright:NN } #1#2
   {
     \dim_set:Nn \l__textfigure_text_coffin_width_dim
       {
         \coffin_wd:N #1
       }
+    % \dim_add:Nn \l__textfigure_text_coffin_width_dim
+    %   {
+    %     \dim_compare:nNnTF
+    %       { \l__textfigure_text_coffin_width_dim }
+    %       <
+    %       { 0.9 \linewidth }
+    %       { 0pt }
+    %       { 0em }
+    %   }
+    \dim_set:Nn \l__textfigure_figure_coffin_horizontal_transform_dim
+      {
+        \linewidth - \l__textfigure_text_coffin_width_dim
+      }
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { t } { r }
-      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { \l__textfigure_figure_coffin_horizontal_transform_dim + \l__textfigure_figure_horizontal_sep_dim }
+      { -1em + \l__textfigure_figure_vertical_sep_dim }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_bottom-right:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { r }
+      #2 { t } { r }
+      { \l__textfigure_figure_horizontal_sep_dim }
       { -1em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-left:NN } #1#2

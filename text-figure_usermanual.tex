@@ -327,9 +327,9 @@
 
 \subsection{键值列表}
 下面介绍 \tn{textfigure} 命令的键值列表
-\begin{function}[added = 2022-01-22, updated = 2022-01-22]{fig-pos}
+\begin{function}[added = 2022-01-22, updated = 2022-01-26]{fig-pos}
   \begin{syntax}
-    |fig-pos| = \meta{postion} \init{bottom-right}
+    |fig-pos| = \meta{postion} \init{right-top}
   \end{syntax}
   设置 \meta{figure} 相对于 \meta{content}的位置，共有下面几个位置：
     \remark{注意下面所说的“图片”是指 \meta{figure} 的内容，可以不是图片（前文已经解释过），但是为了叙述方便还是说是“图片”，而 \meta{content} 是“文本”}
@@ -339,9 +339,13 @@
       \item left：图片在文本左边，垂直中心对齐
       \item right：图片在文本右边，垂直中心对齐
       \item top-left：图片在文本的左上方
+      \item top-center：图片在文本的上方，位于整行的水平中心
       \item top-right：图片在文本的右上方
+      \item top-flushright：图片在文本的右上方，位于水平末端
       \item bottom-left：图片在文本的左下方
+      \item bottom-center：图片在文本的下方，位于整行的水平中心
       \item bottom-right：图片在文本的右下方
+      \item bottom-flushright：图片在文本的右下方，位于水平末端
       \item left-top：图片在文本左边，顶部对齐
       \item left-center：等价于left
       \item left-bottom：图片在文本左边，底部对齐
@@ -464,6 +468,17 @@
 
 \subsection{\cmd{top} 系列}
 
+\subsubsection{\cmd{top} 的三位方位}
+
+\begin{vexample}
+  \textfigure[fig-pos = top]{
+    “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
+  }{
+    \includegraphics[width = 2cm]{example-image-a}
+  }
+\end{vexample}
+
+
 \begin{vexample}
     \textfigure[fig-pos = top-left]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
@@ -489,9 +504,58 @@
 \end{vexample}
 
 
+\subsubsection{\cmd{top} 和 \cmd{top-center} 的区别}
 
+\begin{vexample}
+  \textfigure[fig-pos = top]{
+    \begin{enumerate}
+      \item 画出 $y = f(x)$ 的图像;
+      \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+    \end{enumerate}
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = top-center]{
+      \begin{enumerate}
+        \item 画出 $y = f(x)$ 的图像;
+        \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+      \end{enumerate}
+    }{
+      \includegraphics[width = 3cm]{example-image-a}
+    }
+\end{vexample}
+
+
+\subsubsection{\cmd{top-right} 和 \cmd{top-flushright} 的区别}
+
+\begin{vexample}
+  \textfigure[fig-pos = top-right]{
+    \begin{enumerate}
+      \item 画出 $y = f(x)$ 的图像;
+      \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+    \end{enumerate}
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+\end{vexample}
+
+\begin{vexample}
+  \textfigure[fig-pos = top-flushright]{
+    \begin{enumerate}
+      \item 画出 $y = f(x)$ 的图像;
+      \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+    \end{enumerate}
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+\end{vexample}
 
 \subsection{\cmd{bottom} 系列}
+
+\subsubsection{\cmd{bottom} 的三位方位}
 
 \begin{vexample}
   \textfigure[fig-pos = bottom-left]{
@@ -513,13 +577,60 @@
   \textfigure[fig-pos = bottom-right]{
     “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
   }{
-    \includegraphics[width = 2cm]{example-image-a}
+    \includegraphics[width = 3cm]{example-image-a}
   }
 \end{vexample}
 
-\remark{
-  \cmd{bottom-right} 也是 \cmd{fig-pos} 的默认值。
-}
+\subsubsection{\cmd{bottom-right} 和 \cmd{bottom-flushright} 的区别}
+
+\begin{vexample}
+  \textfigure[fig-pos = bottom-right]{
+    \begin{enumerate}
+      \item 画出 $y = f(x)$ 的图像;
+      \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+    \end{enumerate}
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+\end{vexample}
+
+\begin{vexample}
+  \textfigure[fig-pos = bottom-flushright]{
+    \begin{enumerate}
+      \item 画出 $y = f(x)$ 的图像;
+      \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+    \end{enumerate}
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+\end{vexample}
+
+\subsubsection{\cmd{bottom} 和 \cmd{bottom-center} 的区别}
+
+\begin{vexample}
+  \textfigure[fig-pos = bottom]{
+    \begin{enumerate}
+      \item 画出 $y = f(x)$ 的图像;
+      \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+    \end{enumerate}
+  }{
+    \includegraphics[width = 3cm]{example-image-a}
+  }
+\end{vexample}
+
+\begin{vexample}
+    \textfigure[fig-pos = bottom-center]{
+      \begin{enumerate}
+        \item 画出 $y = f(x)$ 的图像;
+        \item 当 $x \in [0, +\infty), f(x) < a x + b$, 求 $a + b$ 的最小值.
+      \end{enumerate}
+    }{
+      \includegraphics[width = 3cm]{example-image-a}
+    }
+\end{vexample}
+
+
+
 
 
 \subsection{ \cmd{fig-pos} 总结}
@@ -528,9 +639,13 @@
   \begin{itemize}
     \item \meta{pos1} 其实就是图片整体在文本的位置，就是上下左右四个位置
     \item \meta{pos2} 是位置的细节，比如 \meta{pos1} 为 \cmd{top}, \cmd{bottom} 的时候 \meta{pos2} 就是左右（ \cmd{left}, \cmd{right} ），\meta{pos1} 为 \cmd{left}, \cmd{right} 的时候 \meta{pos2} 就是上中下（或顶部中部底部），即 \cmd{top}, \cmd{center}, \cmd{bottom}， 特别地 \cmd{center} 可以省略，即 \cmd{right} 为 \cmd{right-center} 的效果
+    \item 关于  \cmd{top} 和 \cmd{bottom} 系列，根据需要增加了两个键值： \cmd{top-flushright} 和 \cmd{bottom-flushright} ，实现了图片水平方向上有 \env{flushright} 环境的效果
+    \item 为了满足需求和考虑到命令的应用广泛性，将 \cmd{top} 和 \cmd{top-center} 分别设置为两种效果，前者是文本正上方，后者是文本上方，处于行中心（ \cmd{bottom} 与 \cmd{bottom-center} 同理）
   \end{itemize}
 
-
+\remark{
+  \cmd{fig-pos} 的设置已经照顾到绝大情形的应用需求，由于实现机制的原因，可能会造成图片视觉上有一小点的偏移（比如文本某些换行机制导致可能会超出该行一小段距离，或是文本较短，图片水平方向要超出一点（比如 \cmd{fig-pos = bottom-flushright} 的图片是具有 \env{flushright} 的效果的，可能就造成超出文字的效果）），精益求精的用户可以用 \cmd{figure-sep} 进行方便的调节
+}
 
 \subsection{ \cmd{text-ratio} 和 \cmd{text-width} }
 
