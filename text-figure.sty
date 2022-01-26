@@ -48,9 +48,10 @@
 
 \str_new:N \l__textfigure_current_fig_pos_str    % 用来存当前的anchor值
 
-\fp_new:N \l__textfigure_text_ratio_fp          % 文本的比例
+\fp_new:N \l__textfigure_text_ratio_fp              % 文本的比例
 
-\dim_new:N \l__textfigure_text_width_dim        % 文本的宽度
+\dim_new:N \l__textfigure_text_width_dim            % 文本的宽度
+\dim_new:N \l__textfigure_text_coffin_width_dim     % 文本coffin的宽度
 \dim_new:N \l__textfigure_figure_width_dim      % 图片的varwidth环境的宽度
 \dim_new:N \l__textfigure_tmpa_dim              % 临时变量
 \dim_new:N \l__textfigure_figure_horizontal_sep_dim    % 图片水平偏移量
@@ -284,18 +285,26 @@
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-right:NN } #1#2
   {
+    \dim_set:Nn \l__textfigure_text_coffin_width_dim
+      {
+        \coffin_wd:N #1
+      }
     \coffin_join:NnnNnnnn
       #1 { t } { r }
       #2 { b } { r }
-      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { \textwidth - \l__textfigure_text_coffin_width_dim + \l__textfigure_figure_horizontal_sep_dim }
       { 1em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom-right:NN } #1#2
   {
+    \dim_set:Nn \l__textfigure_text_coffin_width_dim
+      {
+        \coffin_wd:N #1
+      }
     \coffin_join:NnnNnnnn
       #1 { b } { r }
       #2 { t } { r }
-      { 0pt + \l__textfigure_figure_horizontal_sep_dim }
+      { \textwidth - \l__textfigure_text_coffin_width_dim + \l__textfigure_figure_horizontal_sep_dim }
       { -1em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_top-left:NN } #1#2
