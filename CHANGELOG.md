@@ -9,7 +9,8 @@
 
 ### Fixed
 - 修复`Improper \prevdepth`报错（[#I4S8MX](https://gitee.com/xkwxdyy/text-figure/issues/I4S8MX)）
-- 修复`fig-pos = left-*` 或 `right-*` 和 `text-ratio` 同时设置时的顺序问题（[#I4S8OE](https://gitee.com/xkwxdyy/text-figure/issues/I4S8OE)）
+- 修复 `fig-pos = left-*` 或 `right-*` 和 `text-ratio` 同时设置时的顺序问题（[#I4S8OE](https://gitee.com/xkwxdyy/text-figure/issues/I4S8OE)）
+- 修复文本短时的 `fig-pos = top-right` 或 `bottom-right` 的图片对齐问题
 
 
 ## [v1.0.1] - 2022-01-25
