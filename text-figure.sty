@@ -67,8 +67,8 @@
     fig-pos .choices:nn =
       { 
         left , right , top , bottom ,
-        top-left , bottom-left ,
-        top-right , bottom-right ,
+        top-left , top-right , top-center ,
+        bottom-left , bottom-right , bottom-center ,
         right-top , right-bottom , right-center ,
         left-top , left-bottom , left-center
       }
@@ -87,7 +87,7 @@
           }
           { \fp_set:Nn \l__textfigure_text_ratio_fp {0.7} }
       },
-    fig-pos .initial:n = bottom-right,
+    fig-pos .initial:n = right-top,
     % figure-vsep：调整图片的垂直额外偏移量
     figure-vsep .dim_set:N = \l__textfigure_figure_vertical_sep_dim,
     figure-vsep .initial:n = 0pt,
@@ -120,20 +120,20 @@
 %%%% 定义函数 %%%%
 \cs_new:Npn \__textfigure_quad:  { \skip_horizontal:n { 1 em } }
 \cs_new:Npn \__textfigure_qquad: { \skip_horizontal:n { 2 em } }
-\cs_new_protected:Npn \__textfigure_vspace:N #1
-  {
-    \dim_set_eq:NN \l__textfigure_tmpa_dim \prevdepth
-    \hrule height \c_zero_dim
-    \nobreak
-    \skip_vertical:N #1
-    \skip_vertical:N \c_zero_skip
-    \dim_set_eq:NN \prevdepth \l__textfigure_tmpa_dim
-  }
-\cs_new_protected:Npn \__textfigure_vspace:n #1
-  {
-    \skip_set:Nn \l__textfigure_tmpa_skip {#1}
-    \__textfigure_vspace:N \l__textfigure_tmpa_skip
-  }
+% \cs_new_protected:Npn \__textfigure_vspace:N #1
+%   {
+%     \dim_set_eq:NN \l__textfigure_tmpa_dim \prevdepth
+%     \hrule height \c_zero_dim
+%     \nobreak
+%     \skip_vertical:N #1
+%     \skip_vertical:N \c_zero_skip
+%     \dim_set_eq:NN \prevdepth \l__textfigure_tmpa_dim
+%   }
+% \cs_new_protected:Npn \__textfigure_vspace:n #1
+%   {
+%     \skip_set:Nn \l__textfigure_tmpa_skip {#1}
+%     \__textfigure_vspace:N \l__textfigure_tmpa_skip
+%   }
 
 % 【已解决】判断anchor是不是west或者east，是的话就自动调整调整一下text-ratio
 % - 问题在于要知道key-val设置了什么anchor才能判断
@@ -183,12 +183,29 @@
 % 用于\textfigure_output:nn的最终拼接
 \cs_new_protected:cpn { textfigure_fig_pos_set_top:NN } #1#2
   {
-    \__textfigure_vspace:n {1em}
+    \vspace*{1em}
     \coffin_join:NnnNnnnn
       #1 { t } { hc }
       #2 { b } { hc }
       { \l__textfigure_figure_horizontal_sep_dim } 
       { 2em + \l__textfigure_figure_vertical_sep_dim }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_top-center:NN } #1#2
+  {
+    \vspace*{1em}
+    \coffin_join:NnnNnnnn
+      #1 { t } { hc }
+      #2 { b } { hc }
+      { \l__textfigure_figure_horizontal_sep_dim } 
+      { 2em + \l__textfigure_figure_vertical_sep_dim }
+  }
+\cs_new_protected:cpn { textfigure_fig_pos_set_bottom-center:NN } #1#2
+  {
+    \coffin_join:NnnNnnnn
+      #1 { b } { hc }
+      #2 { t } { hc }
+      { \l__textfigure_figure_horizontal_sep_dim }
+      { -2em + \l__textfigure_figure_vertical_sep_dim }
   }
 \cs_new_protected:cpn { textfigure_fig_pos_set_bottom:NN } #1#2
   {
