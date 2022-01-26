@@ -3,14 +3,17 @@
 ## [v1.0.2] - 2022-01-26
 ### Added
 - 增加`top-center`, `bottom-center`键值
+- 增加`top-flushright`, `bottom-flushright`键值
 
 ### Changed
 - `fig-pos`初始值改为`right-top`
+- 修改`top-center`, `bottom-center`键值分别为上方水平行中与下方水平行中
 
 ### Fixed
 - 修复`Improper \prevdepth`报错（[#I4S8MX](https://gitee.com/xkwxdyy/text-figure/issues/I4S8MX)）
 - 修复 `fig-pos = left-*` 或 `right-*` 和 `text-ratio` 同时设置时的顺序问题（[#I4S8OE](https://gitee.com/xkwxdyy/text-figure/issues/I4S8OE)）
-- 修复文本短时的 `fig-pos = top-right` 或 `bottom-right` 的图片对齐问题
+- 完善文本短时的 `fig-pos = top-right` 或 `bottom-right` 的图片对齐问题（通过 `top(bottom)-right`和`top(bottom)-flushright` 键值实现）
+- 修复完善问题（[#I4S9SL](https://gitee.com/xkwxdyy/text-figure/issues/I4S9SL)）
 
 
 ## [v1.0.1] - 2022-01-25
