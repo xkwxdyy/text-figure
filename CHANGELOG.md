@@ -1,28 +1,32 @@
-## 更新日志
+# 更新日志
 
-### [v1.0.1] - 2022-01-25
-#### Changed
+## [v1.0.1] - 2022-01-25
+### Added
+- 用户手册中增加说明：`fig-pos = left-*` 或 `right-*` 和 `text-ratio` 同时设置时的顺序问题
+
+## [v1.0.1] - 2022-01-25
+### Changed
 - 将`expl3`宏包的检测改为2020/03/03
 
-#### Fixed
+### Fixed
 - 修复msg的bug
 
 
-### [v0.1.0] - 2022-01-23
-#### Added
+## [v0.1.0] - 2022-01-23
+### Added
 - 增加`figure-vsep`, `figure-hsep`控制图片偏移
 
-#### Changed
+### Changed
 - 将原来的`vsep`, `hsep`改为了控制整体的偏移
 
 
-#### Fixed
+### Fixed
 
 - 解决coffin内有list环境，外套一个list环境后出现的label对齐问题 [#I4RVQX](https://gitee.com/xkwxdyy/text-figure/issues/I4RVQX)
 
-### [v0.0.4] - 2022-01-22
+## [v0.0.4] - 2022-01-22
 
-#### Added
+### Added
 
 - 可以调整图片的`anchor`
 - 可以调整文本的宽度或者占行距的比例
