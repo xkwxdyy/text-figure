@@ -1,4 +1,4 @@
-\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\NeedsTeXFormat{LaTeX2e}[2018/05/12]
 \RequirePackage{expl3}
 \ProvidesExplPackage {text-figure} {2022-01-26} {1.0.2}
   {
@@ -21,20 +21,20 @@
   }
 \@ifpackagelater {expl3} { 2020/03/03 }
   { } { \msg_error:nnn { text-figure } { l3-too-old } {#1} }
-\sys_if_engine_xetex:F
-  {
-    \sys_if_engine_luatex:F
-      {
-        \msg_fatal:nnx { choices } { unsupported-engine }
-          { \c_sys_engine_str }
-      }
-  }
-\msg_new:nnn { text-figure } { unsupported-engine }
-  {
-    The~ choice~ package~ requires~ either~ XeTeX~ or~ LuaTeX. \\\\
-    "#1"~ is~ not~ supported~ at~ present.~ You~ must~ change \\
-    your~ typesetting~ engine~ to~ "xelatex"~ or~ "lualatex".
-  }
+% \sys_if_engine_xetex:F
+%   {
+%     \sys_if_engine_luatex:F
+%       {
+%         \msg_fatal:nnx { choices } { unsupported-engine }
+%           { \c_sys_engine_str }
+%       }
+%   }
+% \msg_new:nnn { text-figure } { unsupported-engine }
+%   {
+%     The~ choice~ package~ requires~ either~ XeTeX~ or~ LuaTeX. \\\\
+%     "#1"~ is~ not~ supported~ at~ present.~ You~ must~ change \\
+%     your~ typesetting~ engine~ to~ "xelatex"~ or~ "lualatex".
+%   }
 
 
 %%%% 宏包载入 %%%%
