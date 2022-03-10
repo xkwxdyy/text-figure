@@ -1,286 +1,22 @@
-% 由于使用了minted宏包排版代码，
-% 需要安装Python
-% 并命令行使用pip install Pygments安装Pygments库
-% 然后编译需要使用xelatex --shell-escape选项
-\documentclass{l3doc}
-\usepackage{ctex}
-\usepackage{hyperref}
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage{varwidth}      % 获得宽度
-\usepackage{graphicx}
-\title{\bfseries text-figure宏包}
-\author{夏康玮\\ \path{kangweixia_xdyy@163.com}}
-\date{2022-01-25\quad v1.0.1 \thanks{\url{https://github.com/xkwxdyy/text-figure}} \thanks{\url{https://gitee.com/xkwxdyy/text-figure}}}
+\documentclass{xdyy-usermanual}
 
-\usepackage{minted}
-\setminted{formatcom=\xeCJKVerbAddon}
-\usepackage{sourcecodepro}
-\usepackage{xcolor}
+\xdyymanualsetup{
+  info = {
+    author            = {夏康玮},
+    title             = {\pkg{text-figure}宏包},
+    email             = {kangweixia_xdyy@163.com},
+    date              = {2022-02-01},
+    version           = {1.0.2},
+    github-repository = {https://github.com/xkwxdyy/},
+    gitee-repository  = {https://gitee.com/xkwxdyy/},
+  }
+}
+
+
+\usepackage{../xchoices/xchoices}
 \usepackage{text-figure}
-\usepackage{choices}
-\usepackage{mwe}
-\makeatletter
-\newlength\savefboxrule
-\newlength\savefboxsep
-\edef\example@name{\jobname-example.aux}
-\newenvironment{hexample}%
-{%
-\renewcommand{\minted@FVB@VerbatimOut}[1]{%
-  \@bsphack
-  \begingroup
-    \FV@DefineWhiteSpace
-    \def\FV@Space{\space}%
-    \FV@DefineTabOut
-    \let\FV@ProcessLine\minted@write@detok
-    \immediate\openout\FV@OutFile ##1\relax
-    \let\FV@FontScanPrep\relax
-    \let\@noligs\relax
-    \FV@Scan}
-\minted@FVB@VerbatimOut{\example@name}}%
-{\minted@FVE@VerbatimOut%
-  \trivlist\item\relax
-  \setlength{\savefboxrule}{\fboxrule}%
-  \setlength{\savefboxsep}{\fboxsep}%
-  \setlength{\fboxsep}{0.015\textwidth}%
-  \setlength{\fboxrule}{0.4pt}%
-  \fcolorbox[gray]{0}{0.95}{%
-    \begin{minipage}[c]{0.45\textwidth}%
-      \setlength{\fboxrule}{\savefboxrule}%
-      \setlength{\fboxsep}{\savefboxsep}%
-      \small\inputminted[breakanywhere,breaklines=true,numbers=left]{latex}{\example@name}%
-    \end{minipage}%
-  }%
-  \hfill%
-  \fbox{%
-    \begin{minipage}[c]{0.45\textwidth}%
-      \setlength{\fboxrule}{\savefboxrule}%
-      \setlength{\fboxsep}{\savefboxsep}%
-      \setlength{\parskip}{1ex plus 0.4ex minus 0.2ex}%
-      \normalsize\input{\example@name}%
-    \end{minipage}%
-  }%
-  \endtrivlist
-}
-\newenvironment{vexample}%
-{%
-\renewcommand{\minted@FVB@VerbatimOut}[1]{%
-  \@bsphack
-  \begingroup
-    \FV@DefineWhiteSpace
-    \def\FV@Space{\space}%
-    \FV@DefineTabOut
-    \let\FV@ProcessLine\minted@write@detok
-    \immediate\openout\FV@OutFile ##1\relax
-    \let\FV@FontScanPrep\relax
-    \let\@noligs\relax
-    \FV@Scan}
-\minted@FVB@VerbatimOut{\example@name}}%
-{\minted@FVE@VerbatimOut%
-  \trivlist\item\relax
-  \setlength{\savefboxrule}{\fboxrule}%
-  \setlength{\savefboxsep}{\fboxsep}%
-  \setlength{\fboxsep}{0.015\textwidth}%
-  \setlength{\fboxrule}{0.4pt}%
-  \begin{minipage}[c]{\textwidth}
-  \fcolorbox[gray]{0}{0.95}{%
-    \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
-      \setlength{\fboxrule}{\savefboxrule}%
-      \setlength{\fboxsep}{\savefboxsep}%
-      \small\inputminted[breakanywhere,breaklines=true,numbers=left]{latex}{\example@name}%
-    \end{minipage}%
-  }\\
-  \fbox{%
-    \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
-    % \begin{varwidth}{\hsize}%
-      \setlength{\fboxrule}{\savefboxrule}%
-      \setlength{\fboxsep}{\savefboxsep}%
-      \setlength{\parskip}{1ex plus 0.4ex minus 0.2ex}%
-      \normalsize\input{\example@name}%
-    \end{minipage}%
-    % \end{varwidth}%
-  }%
-  \end{minipage}
-  \endtrivlist
-}
-\newenvironment{floatexample}%
-{%
-\renewcommand{\minted@FVB@VerbatimOut}[1]{%
-  \@bsphack
-  \begingroup
-    \FV@DefineWhiteSpace
-    \def\FV@Space{\space}%
-    \FV@DefineTabOut
-    \let\FV@ProcessLine\minted@write@detok
-    \immediate\openout\FV@OutFile ##1\relax
-    \let\FV@FontScanPrep\relax
-    \let\@noligs\relax
-    \FV@Scan}
-\minted@FVB@VerbatimOut{\example@name}}%
-{\minted@FVE@VerbatimOut%
-  \trivlist\item\relax
-  \setlength{\savefboxrule}{\fboxrule}%
-  \setlength{\savefboxsep}{\fboxsep}%
-  \setlength{\fboxsep}{0.015\textwidth}%
-  \setlength{\fboxrule}{0.4pt}%
-  \fcolorbox[gray]{0}{0.95}{%
-    \begin{minipage}[c]{\textwidth-0.03\textwidth-0.8pt}%
-      \setlength{\fboxrule}{\savefboxrule}%
-      \setlength{\fboxsep}{\savefboxsep}%
-      \small\inputminted[breakanywhere,breaklines=true,numbers=left]{latex}{\example@name}%
-    \end{minipage}%
-  }\par
-  \input{\example@name}%
-  \endtrivlist
-}
-\makeatother
+\usepackage{graphicx}
 
-\lstnewenvironment{LaTeXdemo}[1][0.4]{
-  \lstset{
-    basicstyle         = \ttfamily\small,
-    basewidth          = 0.51em,
-    backgroundcolor    = \color{cyan!10},
-    % rulecolor          = \color{red!10},
-    frame              = shadowbox,
-    frameround         = tttt,
-    % framerule          = 0pt,
-    gobble             = 2,
-    tabsize            = 2,
-    numbers            = left,
-    language           = [LaTeX]TeX,
-    linewidth          = #1\linewidth
-  }
-}{}
-\ExplSyntaxOn
-\dim_new:N \g__LaTeXautodemo_width_dim
-\box_new:N \g__LaTeXautodemo_width_measure_box
-\makeatletter
-\lst@RequireAspects{writefile}
-\newsavebox\LaTeXautodemo@box
-\lstnewenvironment{LaTeXautodemo}[1][code and example]
-  {%
-    \global\let\lst@intname\@empty
-    \edef\LaTeXautodemo@end{%
-      \expandafter\noexpand\csname LaTeXautodemo@@#1@end\endcsname
-    }%
-    \@nameuse{LaTeXautodemo@@#1}%
-  }
-  {
-    \LaTeXautodemo@end
-  }
-\newcommand\LaTeXautodemo@new[3]{%
-  \@namedef{LaTeXautodemo@@#1}{#2}%
-  \@namedef{LaTeXautodemo@@#1@end}{#3}%
-}
-\newcommand*\LaTeXautodemo@common{%
-  \setkeys{lst}
-    {%
-      basicstyle         = \ttfamily\small,
-      basewidth          = 0.51em,
-      backgroundcolor    = \color{cyan!10},
-      % rulecolor          = \color{red!10},
-      frame              = shadowbox,
-      frameround         = tttt,
-      % framerule          = 0pt,
-      gobble             = 2,
-      tabsize            = 2,
-      numbers            = left,
-      language           = [LaTeX]TeX,
-      % linewidth          = 0.7\linewidth
-    }%
-}
-\newcount\LaTeXautodemo@count
-\newcommand*\LaTeXautodemo@input{%
-  \catcode`\^^M = 10\relax
-  \input{\jobname-\number\LaTeXautodemo@count.tmp}%
-}
-\LaTeXautodemo@new{code and example}{%
-  \setbox\LaTeXautodemo@box=\hbox\bgroup
-    \global\advance\LaTeXautodemo@count by 1 %
-    \lst@BeginAlsoWriteFile{\jobname-\number\LaTeXautodemo@count.tmp}   % 将内容存在中途文件里面
-    \LaTeXautodemo@common
-}{%
-    \lst@EndWriteFile
-  \egroup
-  \hbox_set:Nn \g__LaTeXautodemo_width_measure_box
-    {
-      \begin{varwidth}{\hsize}
-        \usebox\LaTeXautodemo@box
-      \end{varwidth}
-    }
-  \dim_set:Nn \g__LaTeXautodemo_width_dim { \box_wd:N \g__LaTeXautodemo_width_measure_box }
-  % \lstset
-  % 	{
-  % 		linewidth = \dim_use:N \l__LaTeXautodemo_width_dim
-  % 	}
-  \begin{center}
-    \dim_compare:nNnTF { \g__LaTeXautodemo_width_dim } > { 0.4\linewidth}
-      {
-        % \dim_use:N \g__LaTeXautodemo_width_dim
-        \begin{minipage}{\linewidth}
-          % \setkeys{lst}{ linewidth = \dim_use:N \l__LaTeXautodemo_width_dim }
-          \usebox\LaTeXautodemo@box
-        \end{minipage}%
-        \par
-        \begin{minipage}{\linewidth}
-          \LaTeXautodemo@input
-        \end{minipage}
-      }
-      {
-        \begin{minipage}{0.4\linewidth}
-          \usebox\LaTeXautodemo@box
-        \end{minipage}%
-        \hfil
-        \begin{minipage}{0.4\linewidth}
-          \LaTeXautodemo@input
-        \end{minipage}%
-      }
-    % \ifdim\wd\LaTeXautodemo@box > 0.48\linewidth
-    %   \begin{minipage}{\linewidth}
-    %     \usebox\LaTeXautodemo@box
-    %   \end{minipage}%
-    %   \par
-    %   \begin{minipage}{\linewidth}
-    %     \LaTeXautodemo@input
-    %   \end{minipage}
-    % \else
-    %   \begin{minipage}{0.48\linewidth}
-    %     \LaTeXautodemo@input
-    %   \end{minipage}%
-    %   \hfil
-    %   \begin{minipage}{0.48\linewidth}
-    %     \usebox\LaTeXautodemo@box
-    %   \end{minipage}%
-    % \fi
-  \end{center}
-}
-\LaTeXautodemo@new{code and float}{%
-  \global\advance\LaTeXautodemo@count by 1 %
-  \lst@BeginAlsoWriteFile{\jobname-\number\LaTeXautodemo@count.tmp}%
-  \LaTeXautodemo@common
-}{%
-  \lst@EndWriteFile
-  \LaTeXautodemo@input
-}
-\LaTeXautodemo@new{code only}{\LaTeXautodemo@common}{}
-\makeatother
-\ExplSyntaxOff
-
-\renewcommand{\emph}[1]{\begingroup \bfseries \textcolor{red!80}{#1} \endgroup}
-\NewDocumentCommand{\init}{+v}{\hspace{\fill}初始值~=~\textcolor{blue}{\bfseries#1}}
-\DeclareDocumentCommand\kvopt{mm}
-  {\texttt{#1 \breakablethinspace = \breakablethinspace#2}}
-\def\breakablethinspace{\hskip 0.16667em\relax}
-\ExplSyntaxOn
-\NewDocumentCommand{ \remark }{ +m }{
-  \group_begin:
-    \par \large
-    \color{violet}
-    作者注：
-      #1
-  \group_end:
-}
-\ExplSyntaxOff
 
 \begin{document}
 \maketitle
@@ -412,57 +148,57 @@
 
 \subsection{\cmd{right} 系列}
 
-\begin{vexample}
+
     \textfigure[fig-pos = right]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right-top]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right-bottom]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 
 \subsection{\cmd{left} 系列}
 
-\begin{vexample}
+
     \textfigure[fig-pos = left]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = left-top]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = left-bottom]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 
@@ -470,43 +206,43 @@
 
 \subsubsection{\cmd{top} 的三位方位}
 
-\begin{vexample}
+
   \textfigure[fig-pos = top]{
     “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
   }{
     \includegraphics[width = 2cm]{example-image-a}
   }
-\end{vexample}
 
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = top-left]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = top-center]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = top-right]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 \subsubsection{\cmd{top} 和 \cmd{top-center} 的区别}
 
-\begin{vexample}
+
   \textfigure[fig-pos = top]{
     \begin{enumerate}
       \item 画出 $y = f(x)$ 的图像;
@@ -515,9 +251,9 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = top-center]{
       \begin{enumerate}
         \item 画出 $y = f(x)$ 的图像;
@@ -526,12 +262,12 @@
     }{
       \includegraphics[width = 3cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 \subsubsection{\cmd{top-right} 和 \cmd{top-flushright} 的区别}
 
-\begin{vexample}
+
   \textfigure[fig-pos = top-right]{
     \begin{enumerate}
       \item 画出 $y = f(x)$ 的图像;
@@ -540,9 +276,9 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
 
-\begin{vexample}
+
+
   \textfigure[fig-pos = top-flushright]{
     \begin{enumerate}
       \item 画出 $y = f(x)$ 的图像;
@@ -551,39 +287,39 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
+
 
 \subsection{\cmd{bottom} 系列}
 
 \subsubsection{\cmd{bottom} 的三位方位}
 
-\begin{vexample}
+
   \textfigure[fig-pos = bottom-left]{
     “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
   }{
     \includegraphics[width = 2cm]{example-image-a}
   }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = bottom-center]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
   \textfigure[fig-pos = bottom-right]{
     “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
+
 
 \subsubsection{\cmd{bottom-right} 和 \cmd{bottom-flushright} 的区别}
 
-\begin{vexample}
+
   \textfigure[fig-pos = bottom-right]{
     \begin{enumerate}
       \item 画出 $y = f(x)$ 的图像;
@@ -592,9 +328,9 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
 
-\begin{vexample}
+
+
   \textfigure[fig-pos = bottom-flushright]{
     \begin{enumerate}
       \item 画出 $y = f(x)$ 的图像;
@@ -603,11 +339,11 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
+
 
 \subsubsection{\cmd{bottom} 和 \cmd{bottom-center} 的区别}
 
-\begin{vexample}
+
   \textfigure[fig-pos = bottom]{
     \begin{enumerate}
       \item 画出 $y = f(x)$ 的图像;
@@ -616,9 +352,9 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = bottom-center]{
       \begin{enumerate}
         \item 画出 $y = f(x)$ 的图像;
@@ -627,7 +363,7 @@
     }{
       \includegraphics[width = 3cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 
@@ -653,76 +389,76 @@
 
 \subsubsection{ \cmd{text-ratio} 的作用 }
 
-\begin{vexample}
+
     \textfigure[fig-pos = right, text-ratio = 0.3]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right, text-ratio = 0.5]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right, text-ratio = 0.7]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right, text-ratio = 0.5, text-width = 8cm]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 \subsubsection{ \cmd{text-width} 的作用 }
 
-\begin{vexample}
+
     \textfigure[fig-pos = right, text-width = 6cm]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right, text-width = 10cm]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 
 \subsubsection{ \cmd{text-ratio} 和 \cmd{text-width} 同时使用}
 
-\begin{vexample}
+
     \textfigure[fig-pos = right, text-ratio = 0.5]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
 
-\begin{vexample}
+
+
     \textfigure[fig-pos = right, text-ratio = 0.5, text-width = 8cm]{
       “好风凭借力，送我上青云。”少年强则中国强，体育强则中国强。希望以北京冬奥会为契机，把冰雪运动各个项目开展起来，让冰上项目强项更强，同时抓紧补上雪地项目短板，把没有开展的项目开展起来，促进冰雪运动在我国全面开展。
     }{
       \includegraphics[width = 2cm]{example-image-a}
     }
-\end{vexample}
+
 
 
 
@@ -737,12 +473,12 @@
   }{
     \includegraphics[width = 3cm]{example-image-a}
   }
-    \choices{
-      $90\pi$ &&
-      $63\pi$ &&
-      $42\pi$ &&
-      $36\pi$ &&
-    }
+    \begin{xchoices}
+      \item $90\pi$
+      \item $63\pi$
+      \item $42\pi$
+      \item $36\pi$ 
+    \end{xchoices}
 \end{enumerate}
 
 
